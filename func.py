@@ -127,7 +127,10 @@ def FetchTimeSale2(soup, id):
     table = soup.find(id=id)
 
     trs = table.findAll('tr')
-    
+
+    if len(trs) == 1:
+        return None
+
     trs.pop(0)
     trs.pop(len(trs)-1)
     list = []

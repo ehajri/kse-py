@@ -1,16 +1,16 @@
-import time, datetime, sys, os
+import multiprocessing, time
 
-def Process():
-    print(datetime.datetime.now())
-    time.sleep(19)
-    Process()
+def worker(num):
+    "worker function"
+    print("worker %d" % num)
+    if num == 2:
+        time.sleep(10)
+        worker(num)
+    return
 
 if __name__ == '__main__':
-    try:
-        Process()
-    except KeyboardInterrupt:
-        print('Interrupt')
-        try:
-            sys.exit(0)
-        except SystemExit:
-            os._exit(0)
+    jobs = []
+    for i in range(5):
+        p = multiprocessing.Process(target=worker, args=(i,))
+        jobs.append(p)
+        p.start()

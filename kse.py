@@ -7,6 +7,7 @@ import pymysql.cursors
 import sys
 import time
 import os
+import multiprocessing
 from configobj import ConfigObj
 
 config = ConfigObj('config.ini')
@@ -96,6 +97,9 @@ def News():
 
     for i in list:
         i[2] = i[2].strftime('%Y-%m-%d %H:%M:%S')
+        if NewsExists(i[0]):
+            print("article %d exists!" % i[0])
+            continue
         pageContent = func.FetchURL(config['news']['url2'] + str(i[0]))
         temp = func.FetchArticle(pageContent, config['news']['domId2'])
         if temp == None:
@@ -106,6 +110,25 @@ def News():
     sql = "INSERT IGNORE INTO `News` (`newsid`, `headline`, `date`, `message`) VALUES (%s, %s, %s, %s)"
 
     Store(list, sql)
+
+def NewsExists(article_id):
+    connection = pymysql.connect(host=config['db']['host'],
+                             user=config['db']['user'],
+                             passwd=config['db']['pass'],
+                             db=config['db']['dbname'],
+                             charset='utf8',
+                             cursorclass=pymysql.cursors.DictCursor)
+
+    try:
+        with connection.cursor() as cursor:
+            sql = "SELECT COUNT(*) AS total FROM News WHERE `newsid` = {0}".format(article_id)
+            cursor.execute(sql)
+            number_of_rows = cursor.fetchone()['total']
+        connection.commit()
+    finally:
+        connection.close()
+        return number_of_rows > 0
+
 
 def GetTodays(section):
     table = ''
