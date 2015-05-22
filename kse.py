@@ -1,16 +1,18 @@
 #!/usr/local/bin/python3
 
 import models
-import datetime
 import func
 import pymysql.cursors
-import sys
-import time
-import os
-import multiprocessing
+import sys, os, time, datetime
+import threading, logging
+
 from configobj import ConfigObj
 
+logging.basicConfig(stream=sys.stderr, level=logging.WARNING)
+
 config = ConfigObj('config.ini')
+
+lastruns = { 'timesale': None, 'live': None, 'obook': None, 'news': None }
 
 def ListToTuple(list):
     list2 = []
@@ -66,52 +68,54 @@ def Store(list, sql):
     try:
         with connection.cursor() as cursor:
             affectedrows = cursor.executemany(sql, list)
-            print("Inserted %d rows" % affectedrows)
+            logging.debug("Inserted %d rows", affectedrows)
 
         connection.commit()
     finally:
         connection.close()
 
 def LiveStock():
-    print("%s Live Stock Listener started!" % datetime.datetime.now().time())
+    logging.info("%s Live Stock Listener started!", datetime.datetime.now().time())
     pageContent = func.FetchURL(config['rquotes']['url'])
 
     list = func.FetchRQuotes(pageContent, config['rquotes']['domId'])
 
     if list == None:
-        print("Nothing returned from FetchRQuotes")
+        logging.warning("Nothing returned from FetchRQuotes")
     else:
         #list.append([507, 108.000, 8.000, 108.000, 108.000, 108.000, 1, 2, 108.000, 100.000, 100.000, '2017-04-15', 96.000, 0.000]);
         sql = "INSERT IGNORE INTO `RQuotes` (`ticker_id`, `last`, `change`, `open`, `high`, `low`, `vol`, `trade`, `value`, `prev`, `ref`, `prev_date`, `bid`, `ask`) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
         Store(list, sql)
 
 def News():
-    print("%s News Listener started!" % datetime.datetime.now().time())
+    logging.info("%s News Listener started!" % datetime.datetime.now().time())
     pageContent = func.FetchURL(config['news']['url1'])
 
     list = func.FetchNews(pageContent, config['news']['domId1'])
 
     if list == None:
-        print("News did not return anything")
+        logging.warning("News did not return anything")
         return
 
     for i in list:
+        if NewsExists(i[0], i[2]):
+            list.remove(i)
+
+    for i in list:
         i[2] = i[2].strftime('%Y-%m-%d %H:%M:%S')
-        if NewsExists(i[0]):
-            print("article %d exists!" % i[0])
-            continue
         pageContent = func.FetchURL(config['news']['url2'] + str(i[0]))
         temp = func.FetchArticle(pageContent, config['news']['domId2'])
         if temp == None:
-            print("%d returned none" %i[0])
+            logging.warning("%d returned none" % i[0])
         else:
+            # print("%d to insert" % i[0])
             i.append(temp)
 
     sql = "INSERT IGNORE INTO `News` (`newsid`, `headline`, `date`, `message`) VALUES (%s, %s, %s, %s)"
 
     Store(list, sql)
 
-def NewsExists(article_id):
+def NewsExists(article_id, article_date):
     connection = pymysql.connect(host=config['db']['host'],
                              user=config['db']['user'],
                              passwd=config['db']['pass'],
@@ -121,7 +125,7 @@ def NewsExists(article_id):
 
     try:
         with connection.cursor() as cursor:
-            sql = "SELECT COUNT(*) AS total FROM News WHERE `newsid` = {0}".format(article_id)
+            sql = "SELECT COUNT(*) AS total FROM News WHERE `newsid` = {0} AND `date` = '{1}'".format(article_id, article_date)
             cursor.execute(sql)
             number_of_rows = cursor.fetchone()['total']
         connection.commit()
@@ -159,7 +163,7 @@ def GetTodays(section):
         return number_of_rows
 
 def OBook():
-    print("%s OBook Listener started!" % datetime.datetime.now().time())
+    logging.info("%s OBook Listener started!" % datetime.datetime.now().time())
     pageContent = func.FetchURL(config['obook']['url'])
 
     list = func.FetchOBook(pageContent, config['obook']['domId'])
@@ -197,16 +201,16 @@ def TimeSale2():
     Store(list, sql)
 
 def TimeSale():
-    print("%s TimeSale Listener started!" % datetime.datetime.now().time())
+    logging.info("%s TimeSale Listener started!" % datetime.datetime.now().time())
 
     pageContent = func.FetchURL(config['timesale']['url2'])
 
     list = func.FetchTimeSale2(pageContent, config['timesale']['domId2'])
 
     if list == None:
-        print("Nothing returned from FetchTimeSale2")
+        logging.warning("Nothing returned from FetchTimeSale2")
     elif len(list) == 0:
-        print("0 record returned from FetchTimeSale2")
+        logging.warning("0 record returned from FetchTimeSale2")
     else:
         fields = KeysToFields('ticker_id price quantity datetime')
         sql = "INSERT IGNORE INTO `TimeSale` (" + fields + ") VALUES (%s, %s, %s, %s)"
@@ -219,7 +223,6 @@ def Loop(f, interval):
   def inner():
     while True:
         try:
-            UpdateRunning(str(f).split(' ')[1])
             f()
         except:
             pass
@@ -227,8 +230,61 @@ def Loop(f, interval):
             time.sleep(interval)
   return inner
 
-
 def Process():
+    Loop(dome, 10)()
+
+def dome():
+    for f in funcs:
+        t = threading.Thread(target=f)
+        t.daemon = True
+        t.start()
+
+
+def Job1():
+    if lastruns['timesale'] is None:
+
+        lastruns['timesale'] = datetime.datetime.now()
+
+    diff = (datetime.datetime.now() - lastruns['timesale']).seconds
+    if diff >= 10:
+        lastruns['timesale'] = datetime.datetime.now()
+        UpdateRunning('TimeSale')
+        TimeSale()
+
+
+def Job2():
+    if lastruns['live'] is None:
+        lastruns['live'] = datetime.datetime.now()
+
+    diff = (datetime.datetime.now() - lastruns['live']).seconds
+    if diff >= 10:
+        lastruns['live'] = datetime.datetime.now()
+        UpdateRunning('LiveStock')
+        LiveStock()
+
+def Job3():
+    if lastruns['news'] is None:
+        lastruns['news'] = datetime.datetime.now()
+
+    diff = (datetime.datetime.now() - lastruns['news']).seconds
+    if diff >= 60:
+        lastruns['news'] = datetime.datetime.now()
+        UpdateRunning('News')
+        News()
+
+def Job4():
+    if lastruns['obook'] is None:
+        lastruns['obook'] = datetime.datetime.now()
+
+    diff = (datetime.datetime.now() - lastruns['obook']).seconds
+    if diff >= 10:
+        lastruns['obook'] = datetime.datetime.now()
+        UpdateRunning('OBook')
+        OBook()
+
+funcs = [Job1, Job2, Job3, Job4]
+
+def Process2():
     if len(sys.argv) < 2:
         print('No argument found.. terminating!')
     else:
