@@ -63,8 +63,13 @@ def FetchNews(soup, id):
 def FetchOBook(soup, id):
     "Fetches Orders Book from a soup object"
     table = soup.find(id=id)
+
+    if table is None:
+        return None
     #print(table)
     trs = table.findAll('tr')
+    if trs is None:
+        return None
     #print(trs)
     trs.pop(0)
     list = []
@@ -126,9 +131,12 @@ def FetchTimeSale2(soup, id):
     "Fetches time and sale from a soup object"
     table = soup.find(id=id)
 
+    if table is None:
+        return Nonel
+
     trs = table.findAll('tr')
 
-    if len(trs) == 1:
+    if trs is None or len(trs) == 1:
         return None
 
     trs.pop(0)

@@ -168,6 +168,9 @@ def OBook():
 
     list = func.FetchOBook(pageContent, config['obook']['domId'])
 
+    if list is None:
+        return
+
     for i, a in enumerate(list):
         list[i] = [(float(x) if x else 0) for x in a]
         list[i].append(datetime.datetime.today().date())
@@ -234,6 +237,23 @@ def Process():
     Loop(dome, 10)()
 
 def dome():
+    t = datetime.datetime.today()
+    w = t.weekday()
+    h = t.time().hour
+
+    if t == 4 or t == 5:
+        logging.debug('Weekend!')
+        return
+
+    if h >= 15:
+        logging.debug('too late!')
+        return
+    if h < 8:
+        logging.debug('too early?')
+        return
+
+    logging.debug('show time!')
+
     for f in funcs:
         t = threading.Thread(target=f)
         t.daemon = True

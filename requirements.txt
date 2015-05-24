@@ -1,0 +1,5 @@
+peewee
+requests
+beautifulsoup4
+pymysql
+configobj
