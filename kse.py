@@ -8,7 +8,7 @@ import threading, logging
 
 from configobj import ConfigObj
 
-logging.basicConfig(stream=sys.stderr, level=logging.WARNING)
+logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
 
 config = ConfigObj('config.ini')
 
@@ -68,7 +68,10 @@ def Store(list, sql):
     try:
         with connection.cursor() as cursor:
             affectedrows = cursor.executemany(sql, list)
-            logging.debug("Inserted %d rows", affectedrows)
+            if affectedrows is None:
+                loggin.warning('affected rows is null!')
+            else:
+                logging.debug("Inserted %d rows", affectedrows)
 
         connection.commit()
     finally:
@@ -176,9 +179,11 @@ def OBook():
         list[i].append(datetime.datetime.today().date())
 
     fields = KeysToFields('ticker_id price bid bid_qty ask ask_qty createdon')
+    
+    if len(list) == 0:
+        return
 
     sql = "INSERT IGNORE INTO `OBook` (" + fields + ") VALUES (%s, %s, %s, %s, %s, %s, %s)"
-
     Store(list, sql)
 
 def KeysToFields(str):

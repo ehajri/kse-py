@@ -1,6 +1,9 @@
 import requests
-import datetime
+import datetime, sys, logging
 from bs4 import BeautifulSoup
+
+
+logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
 
 def FetchURL(link):
     "Reads the URL and fetch its content"
@@ -11,9 +14,15 @@ def FetchURL(link):
 def FetchRQuotes(soup, id):
     "Fetches RQuotes records from a soup object"
     table = soup.find(id=id)
-    if not table:
+
+    if not table or table is None:
         return None
+
     trs = table.findAll('tr')
+
+    if trs is None or len(trs) == 0:
+        return None
+
     trs.pop(0)
     list = []
     for tr in trs:
@@ -174,13 +183,19 @@ def Sanitize(str):
     return str.strip().replace(',', '')
 
 def ChangeTypes(list):
-    for i in [0, 6, 7]:
-        list[i] = 0 if not list[i] else int(list[i])
-    for i in [1, 2, 3, 4, 5, 8, 9, 10, 12, 13]:
-        list[i] = 0 if not list[i] else float(list[i])
+    try:
+        for i in [0, 6, 7]:
+            list[i] = 0 if not list[i] else int(list[i])
+        for i in [1, 2, 3, 4, 5, 8, 9, 10, 12, 13]:
+            list[i] = 0 if not list[i] else float(list[i])
 
-    list[11] = datetime.datetime.strptime(list[11], "%d-%m-%Y").date()
-    return list
+        list[11] = datetime.datetime.strptime(list[11], "%d-%m-%Y").date()
+        return list
+    except:
+        logging.warning(list)
+        pass
+    return None
+
 
 def MakeDict(list, names):
     listofdict = []

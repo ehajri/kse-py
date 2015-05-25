@@ -16,22 +16,29 @@ import requests
 #         print(inst)
 #         pass
 
-apis = ['listed-companies', 'amr', 'fairValues', 'capital-increase', 'earnings', 'stocks/prices']
+apis = ['listed-companies', 'amr', 'fairValues', 'capital-increase', 'earnings']
 countries = ['kw', 'sa']
 
-def makehost(uri, lang='ar', c='kw', size=20, start=0, extra='', plain=False):
+def makehost(uri, lang, args={}):
     if lang != 'ar' and lang != 'en':
         print('invalid language')
         return
-
+    
     host = '.mubasher.info/api/1/'
-
+    
     prefix = 'www' if lang == 'ar' else 'english'
     prefix = 'http://' + prefix
-
+    
     url = prefix + host + uri
-    if not plain:
-        url += '?country=' + c + '&size=' + str(size) + '&start=' + str(start) + '&' + extra
+    
+    querystring = []
+    
+    for i in args:
+        querystring.insert(0, '{0}={1}'.format(i, args[i]))
+    
+    querystring = '?' + '&'.join(querystring)
+    
+    url = prefix + host + uri + querystring
     
     return url
 
@@ -56,9 +63,12 @@ def func(url):
     return
 
 def func2():
+    country = 'kw'
+    lang = 'en'
+    args = {'country': country}
     for api in apis:
         print('Processing %s..' % api)
-        url = makehost(api, 'en', {})
+        url = makehost(api, 'en', args)
         p = func(url)
         rows = p['rows']
         pages = p['numberOfPages']
@@ -67,20 +77,23 @@ def func2():
         j = pages * i
         
         for start in range(i, j, i):
-            d = {size: i, start: start}
-            h = makehost(api, size=i, start=start)
+            args['start'] = start
+            args['size'] = i
+            d = {'size': i, 'start': start}
+            h = makehost(api, lang, args)
             print(h)
         break
 
-# 1 item = 1 page, 2 items = 1 page, 20 items = 1 page, 21 = 2 pages
-
 func2()
 
+# below is a list of apis which supports both paging and country
+# 
+# listed-companies ==> country
+# amr (same)
+# fairValues
+# capital-increase
+# earnings => year!
+# 
+# stocks/prices/all or /? gives "lastUpdate" and "prices" => []
+
 # http://www.mubasher.info/api/1/events?countries=kw&from=2015-05-23&to=2015-05-30
-# http://www.mubasher.info/api/1/stocks/prices?country=kw
-# http://www.mubasher.info/api/1/stocks/prices/all?country=kw
-# http://www.mubasher.info/api/1/ipos?country=kw
-# http://www.mubasher.info/api/1/earnings?country=kw
-# http://www.mubasher.info/api/1/earnings?country=kw&size=20&start=20
-# http://www.mubasher.info/api/1/earnings?country=kw&year=2012
-# http://www.mubasher.info/api/1/earnings?country=kw&size=20&start=80&year=2012
