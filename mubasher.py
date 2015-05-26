@@ -1,23 +1,8 @@
 #!/usr/local/bin/python3
 import requests
 
-# link = 'mo'
-# r = requests.get(link)
-# 
-# if r.status_code == requests.codes.ok:
-#     try:
-#         # print(r.text)
-#         # print(r.json())
-#         # print(o)
-#         v = 1
-#     except Exception as inst:
-#         print(type(inst))     # the exception instance
-#         print(inst.args)      # arguments stored in .args
-#         print(inst)
-#         pass
-
 apis = ['listed-companies', 'amr', 'fairValues', 'capital-increase', 'earnings']
-countries = ['kw', 'sa']
+countries = ['kw', 'sa', 'ae', 'bh', 'om', 'qa', 'eg', 'jo', 'tn', 'ma', 'ps','iq']
 
 def makehost(uri, lang, args={}):
     if lang != 'ar' and lang != 'en':
@@ -42,47 +27,71 @@ def makehost(uri, lang, args={}):
     
     return url
 
-def func(url):
-    print('fetching %s..' % url)
-
+def Fetch(url):
     try:
         r = requests.get(url)
-        j = r.json()
-        if ('rows' not in j and 'numberOfPages' not in j) or len(j) != 2:
-            print('need manual check')
-        if 'rows' in j:
-            print('rows: %d' % len(j['rows']))
-        if 'numberOfPages' in j:
-            print('pages: %d' % j['numberOfPages'])
-        
-        return j
-    except:
-        print('error')
-        pass
+        if r.status_code == requests.codes.ok:
+            return r.json()
+        else:
+            print('%s %s' % (url, r.status_code))
+    except Exception as e:
+        print('Fetch Exception: %s %s' % (url, str(e)))
 
-    return
+    return None
 
 def func2():
-    country = 'kw'
-    lang = 'en'
-    args = {'country': country}
-    for api in apis:
-        print('Processing %s..' % api)
-        url = makehost(api, 'en', args)
-        p = func(url)
-        rows = p['rows']
-        pages = p['numberOfPages']
-        
-        i = len(rows)
-        j = pages * i
-        
-        for start in range(i, j, i):
-            args['start'] = start
-            args['size'] = i
-            d = {'size': i, 'start': start}
-            h = makehost(api, lang, args)
-            print(h)
-        break
+    langs = ['ar', 'en']
+    for lang in langs:
+        for country in countries:
+            args = {'country': country}
+            for api in apis:
+                print('Processing %s for %s in %s..' % (api, country, lang))
+
+                url = makehost(api, lang, args)
+                p = Fetch(url)
+                
+                if p is None:
+                    continue
+
+                rows = p['rows']
+                pages = p['numberOfPages']
+                
+                Store(rows)
+                
+                i = len(rows)
+                j = pages * i
+                
+                for start in range(i, j, i):
+                    args['start'] = start
+                    args['size'] = i
+                    d = {'size': i, 'start': start}
+
+                    url = makehost(api, lang, args)
+                    p = Fetch(url)
+                    print(h)
+                break
+
+def Store(jsons):
+
+    connection = pymysql.connect(host=config['db']['host'],
+                             user=config['db']['user'],
+                             passwd=config['db']['pass'],
+                             db=config['db']['dbname2'],
+                             charset='utf8',
+                             cursorclass=pymysql.cursors.DictCursor)
+
+    try:
+        with connection.cursor() as cursor:
+            affectedrows = cursor.executemany(sql, list)
+            if affectedrows is None:
+                loggin.warning('affected rows is null!')
+            elif affectednow
+            else:
+                logging.debug("Inserted %d rows", affectedrows)
+
+        connection.commit()
+    finally:
+        connection.close()
 
 func2()
 
