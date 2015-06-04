@@ -8,7 +8,7 @@ import threading, logging
 
 from configobj import ConfigObj
 
-logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
+logging.basicConfig(stream=sys.stderr, level=logging.WARNING)
 
 config = ConfigObj('config.ini')
 
@@ -249,7 +249,7 @@ def dome():
     if t == 4 or t == 5:
         logging.debug('Weekend!')
         return
-
+    
     if h >= 15:
         logging.debug('too late!')
         return

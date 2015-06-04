@@ -1,8 +1,18 @@
 #!/usr/local/bin/python3
-import requests
+import pymysql.cursors
+import requests, logging, sys, time
+from configobj import ConfigObj
+from random import randint
+import json
 
-apis = ['listed-companies', 'amr', 'fairValues', 'capital-increase', 'earnings']
-countries = ['kw', 'sa', 'ae', 'bh', 'om', 'qa', 'eg', 'jo', 'tn', 'ma', 'ps','iq']
+logging.basicConfig(stream=sys.stderr, level=logging.WARNING)
+
+config = ConfigObj('config.ini')
+
+apis = ['amr', 'listed-companies', 'fairValues', 'capital-increase', 'earnings']
+countries = ['kw', 'sa', 'ae', 'bh', 'om', 'qa', 'eg', 'jo', 'tn', 'ma', 'ps']
+# countries = ['kw', 'sa', 'ae', 'bh', 'om', 'qa', 'eg', 'jo', 'tn', 'ma', 'ps', 'iq']
+
 
 def makehost(uri, lang, args={}):
     if lang != 'ar' and lang != 'en':
@@ -29,6 +39,7 @@ def makehost(uri, lang, args={}):
 
 def Fetch(url):
     try:
+        time.sleep(randint(1, 7))
         r = requests.get(url)
         if r.status_code == requests.codes.ok:
             return r.json()
@@ -40,14 +51,14 @@ def Fetch(url):
     return None
 
 def func2():
-    langs = ['ar', 'en']
+    langs = ['ar']
+    # langs = ['en', 'ar']
     for lang in langs:
         for country in countries:
-            args = {'country': country}
             for api in apis:
-                print('Processing %s for %s in %s..' % (api, country, lang))
-
+                args = {'country': country}
                 url = makehost(api, lang, args)
+                print('Processing %s for %s in %s (%s)..' % (api, country, lang, url))
                 p = Fetch(url)
                 
                 if p is None:
@@ -56,22 +67,44 @@ def func2():
                 rows = p['rows']
                 pages = p['numberOfPages']
                 
-                Store(rows)
-                
                 i = len(rows)
                 j = pages * i
                 
+                if i == 0:
+                    continue
+
+                records = MakeRecords(rows, lang, url)
+                StoreRecords(records)
+
                 for start in range(i, j, i):
                     args['start'] = start
                     args['size'] = i
-                    d = {'size': i, 'start': start}
 
                     url = makehost(api, lang, args)
                     p = Fetch(url)
-                    print(h)
-                break
+                
+                    if p is None:
+                        continue
 
-def Store(jsons):
+                    rows = p['rows']
+                    pages = p['numberOfPages']
+                    
+                    if len(rows) == 0:
+                        continue
+                    
+                    records = MakeRecords(rows, lang, url)
+                    StoreRecords(records)
+
+
+def MakeRecords(listOfJson, lang, url):
+    list = []
+    for i in listOfJson:
+        list.append((json.dumps(i), lang, url))
+    return list
+
+def StoreRecords(list):
+    
+    sql = "INSERT IGNORE INTO `jsons` (json, lang, uri) VALUES (%s, %s, %s)"
 
     connection = pymysql.connect(host=config['db']['host'],
                              user=config['db']['user'],
@@ -84,8 +117,9 @@ def Store(jsons):
         with connection.cursor() as cursor:
             affectedrows = cursor.executemany(sql, list)
             if affectedrows is None:
-                loggin.warning('affected rows is null!')
-            elif affectednow
+                logging.warning('affected rows is null!')
+            elif affectedrows == 0:
+                logging.warning('affected rows is 0!')
             else:
                 logging.debug("Inserted %d rows", affectedrows)
 
