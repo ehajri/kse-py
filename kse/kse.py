@@ -10,7 +10,7 @@ from configobj import ConfigObj
 
 logging.basicConfig(stream=sys.stderr, level=logging.WARNING)
 
-config = ConfigObj('config.ini')
+config = ConfigObj('../config.ini')
 
 lastruns = { 'timesale': None, 'live': None, 'obook': None, 'news': None }
 

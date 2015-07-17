@@ -7,7 +7,7 @@ import json
 
 logging.basicConfig(stream=sys.stderr, level=logging.WARNING)
 
-config = ConfigObj('config.ini')
+config = ConfigObj('../config.ini')
 
 apis = ['amr', 'listed-companies', 'fairValues', 'capital-increase', 'earnings']
 countries = ['kw', 'sa', 'ae', 'bh', 'om', 'qa', 'eg', 'jo', 'tn', 'ma', 'ps']
