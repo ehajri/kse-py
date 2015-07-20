@@ -246,7 +246,7 @@ def dome():
     w = t.weekday()
     h = t.time().hour
 
-    if t == 4 or t == 5:
+    if w == 4 or w == 5:
         logging.debug('Weekend!')
         return
     
