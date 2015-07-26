@@ -14,7 +14,7 @@ Session_S = scoped_session(sessionmaker(bind=stock_engine))
 Session_M = scoped_session(sessionmaker(bind=mubasher_engine))
 
 tt = t_rquotes_summary.c
-q = Session_S.query(t_rquotes_summary).filter(tt.datetime >= '2015-07-15')
+q = Session_S.query(t_rquotes_summary).filter(tt.datetime >= '2015-07-16')
 q = q.filter(and_(tt.open != 0, tt.high != 0, tt.low != 0, tt.closing != 0, tt.volume != 0))
 
 for i in q:
