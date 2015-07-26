@@ -87,6 +87,8 @@ def LiveStock():
         logging.warning("Nothing returned from FetchRQuotes")
     else:
         #list.append([507, 108.000, 8.000, 108.000, 108.000, 108.000, 1, 2, 108.000, 100.000, 100.000, '2017-04-15', 96.000, 0.000]);
+        list = [x for x in list if all(xx != 0 for xx in x[1:9])]
+
         sql = "INSERT IGNORE INTO `RQuotes` (`ticker_id`, `last`, `change`, `open`, `high`, `low`, `vol`, `trade`, `value`, `prev`, `ref`, `prev_date`, `bid`, `ask`) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
         Store(list, sql)
 
@@ -275,7 +277,6 @@ def Job1():
         lastruns['timesale'] = datetime.datetime.now()
         UpdateRunning('TimeSale')
         TimeSale()
-
 
 def Job2():
     if lastruns['live'] is None:
