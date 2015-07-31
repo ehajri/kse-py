@@ -3,7 +3,7 @@ import datetime, sys, logging
 from bs4 import BeautifulSoup
 
 
-logging.basicConfig(stream=sys.stderr, level=logging.WARNING)
+logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
 
 def FetchURL(link):
     "Reads the URL and fetch its content"
