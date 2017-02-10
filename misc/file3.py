@@ -139,7 +139,7 @@ def PutRecords(sql, list):
         with connection.cursor() as cursor:
             affectedrows = cursor.executemany(sql, list)
             if affectedrows is None:
-                loggin.warning('affected rows is null!')
+                logging.warning('affected rows is null!')
             else:
                 logging.debug("Inserted %d rows", affectedrows)
 

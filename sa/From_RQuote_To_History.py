@@ -7,14 +7,14 @@ from sqlalchemy.sql import select
 
 
 
-stock_engine = create_engine('mysql://root:@localhost/stock')
-mubasher_engine = create_engine('mysql://root:@localhost/mubasher')
+stock_engine = create_engine('mysql+pymysql://root:@localhost/stock')
+mubasher_engine = create_engine('mysql+pymysql://root:@localhost/mubasher')
 
 Session_S = scoped_session(sessionmaker(bind=stock_engine))
 Session_M = scoped_session(sessionmaker(bind=mubasher_engine))
 
 tt = t_rquotes_summary.c
-q = Session_S.query(t_rquotes_summary).filter(tt.datetime >= '2015-07-27')
+q = Session_S.query(t_rquotes_summary).filter(tt.datetime >= '2015-08-31')
 q = q.filter(and_(tt.open != 0, tt.high != 0, tt.low != 0, tt.closing != 0, tt.volume != 0))
 
 for i in q:

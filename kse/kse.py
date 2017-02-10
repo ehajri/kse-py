@@ -1,5 +1,3 @@
-#!/usr/local/bin/python3
-
 import models
 import func
 import pymysql.cursors
@@ -69,7 +67,7 @@ def Store(list, sql):
         with connection.cursor() as cursor:
             affectedrows = cursor.executemany(sql, list)
             if affectedrows is None:
-                loggin.warning('affected rows is null!')
+                logging.warning('affected rows is null!')
             else:
                 logging.debug("Inserted %d rows", affectedrows)
 
@@ -181,7 +179,7 @@ def OBook():
         list[i].append(datetime.datetime.today().date())
 
     fields = KeysToFields('ticker_id price bid bid_qty ask ask_qty createdon')
-    
+
     if len(list) == 0:
         return
 
@@ -251,7 +249,7 @@ def dome():
     if w == 4 or w == 5:
         logging.debug('Weekend!')
         return
-    
+
     if h >= 15:
         logging.debug('too late!')
         return
