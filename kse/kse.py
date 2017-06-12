@@ -6,11 +6,12 @@ import threading, logging
 
 from configobj import ConfigObj
 
-logging.basicConfig(stream=sys.stderr, level=logging.WARNING)
+logging.basicConfig(stream=sys.stderr, level=logging.INFO)
 
 config = ConfigObj('../config.ini')
 
 lastruns = { 'timesale': None, 'live': None, 'obook': None, 'news': None }
+
 
 def ListToTuple(list):
     list2 = []
@@ -18,13 +19,14 @@ def ListToTuple(list):
         list2.append(tuple(i))
     return list2
 
+
 def UpdateRunning(str):
     connection = pymysql.connect(host=config['db']['host'],
-                             user=config['db']['user'],
-                             passwd=config['db']['pass'],
-                             db=config['db']['dbname'],
-                             charset='utf8',
-                             cursorclass=pymysql.cursors.DictCursor)
+                                 user=config['db']['user'],
+                                 passwd=config['db']['pass'],
+                                 db=config['db']['dbname'],
+                                 charset='utf8',
+                                 cursorclass=pymysql.cursors.DictCursor)
 
     try:
         with connection.cursor() as cursor:
@@ -38,11 +40,11 @@ def UpdateRunning(str):
 def GetTickers():
     result = []
     connection = pymysql.connect(host=config['db']['host'],
-                             user=config['db']['user'],
-                             passwd=config['db']['pass'],
-                             db=config['db']['dbnane'],
-                             charset='utf8',
-                             cursorclass=pymysql.cursors.DictCursor)
+                                 user=config['db']['user'],
+                                 passwd=config['db']['pass'],
+                                 db=config['db']['dbnane'],
+                                 charset='utf8',
+                                 cursorclass=pymysql.cursors.DictCursor)
 
     try:
         with connection.cursor() as cursor:
@@ -135,6 +137,8 @@ def NewsExists(article_id, article_date):
     finally:
         connection.close()
         return number_of_rows > 0
+
+# not used?
 
 
 def GetTodays(section):
@@ -307,7 +311,7 @@ def Job4():
         OBook()
 
 funcs = [Job1, Job2, Job3, Job4]
-
+#funcs = [Job2]
 def Process2():
     if len(sys.argv) < 2:
         print('No argument found.. terminating!')
