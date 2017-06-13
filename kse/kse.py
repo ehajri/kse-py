@@ -6,7 +6,8 @@ import threading, logging
 
 from configobj import ConfigObj
 
-logging.basicConfig(stream=sys.stderr, level=logging.INFO)
+logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
+logger = logging.getLogger(__name__)
 
 config = ConfigObj('../config.ini')
 
@@ -69,22 +70,22 @@ def Store(list, sql):
         with connection.cursor() as cursor:
             affectedrows = cursor.executemany(sql, list)
             if affectedrows is None:
-                logging.warning('affected rows is null!')
+                logger.warning('affected rows is null!')
             else:
-                logging.debug("Inserted %d rows", affectedrows)
+                logger.debug("Inserted %d rows", affectedrows)
 
         connection.commit()
     finally:
         connection.close()
 
 def LiveStock():
-    logging.info("%s Live Stock Listener started!", datetime.datetime.now().time())
+    logger.info("%s Live Stock Listener started!", datetime.datetime.now().time())
     pageContent = func.FetchURL(config['rquotes']['url'])
 
     list = func.FetchRQuotes(pageContent, config['rquotes']['domId'])
 
     if list == None:
-        logging.warning("Nothing returned from FetchRQuotes")
+        logger.warning("Nothing returned from FetchRQuotes")
     else:
         #list.append([507, 108.000, 8.000, 108.000, 108.000, 108.000, 1, 2, 108.000, 100.000, 100.000, '2017-04-15', 96.000, 0.000]);
         list = [x for x in list if all(xx != 0 for xx in x[1:9])]
@@ -93,13 +94,13 @@ def LiveStock():
         Store(list, sql)
 
 def News():
-    logging.info("%s News Listener started!" % datetime.datetime.now().time())
+    logger.info("%s News Listener started!" % datetime.datetime.now().time())
     pageContent = func.FetchURL(config['news']['url1'])
 
     list = func.FetchNews(pageContent, config['news']['domId1'])
 
     if list == None:
-        logging.warning("News did not return anything")
+        logger.warning("News did not return anything")
         return
 
     for i in list:
@@ -111,7 +112,7 @@ def News():
         pageContent = func.FetchURL(config['news']['url2'] + str(i[0]))
         temp = func.FetchArticle(pageContent, config['news']['domId2'])
         if temp == None:
-            logging.warning("%d returned none" % i[0])
+            logger.warning("%d returned none" % i[0])
         else:
             # print("%d to insert" % i[0])
             i.append(temp)
@@ -170,7 +171,7 @@ def GetTodays(section):
         return number_of_rows
 
 def OBook():
-    logging.info("%s OBook Listener started!" % datetime.datetime.now().time())
+    logger.info("%s OBook Listener started!" % datetime.datetime.now().time())
     pageContent = func.FetchURL(config['obook']['url'])
 
     list = func.FetchOBook(pageContent, config['obook']['domId'])
@@ -213,16 +214,16 @@ def TimeSale2():
     Store(list, sql)
 
 def TimeSale():
-    logging.info("%s TimeSale Listener started!" % datetime.datetime.now().time())
+    logger.info("%s TimeSale Listener started!" % datetime.datetime.now().time())
 
     pageContent = func.FetchURL(config['timesale']['url2'])
 
     list = func.FetchTimeSale2(pageContent, config['timesale']['domId2'])
 
     if list == None:
-        logging.warning("Nothing returned from FetchTimeSale2")
+        logger.warning("Nothing returned from FetchTimeSale2")
     elif len(list) == 0:
-        logging.warning("0 record returned from FetchTimeSale2")
+        logger.warning("0 record returned from FetchTimeSale2")
     else:
         fields = KeysToFields('ticker_id price quantity datetime')
         sql = "INSERT IGNORE INTO `TimeSale` (" + fields + ") VALUES (%s, %s, %s, %s)"
@@ -251,17 +252,17 @@ def dome():
     h = t.time().hour
 
     if w == 4 or w == 5:
-        logging.debug('Weekend!')
+        logger.debug('Weekend!')
         return
 
     if h >= 15:
-        logging.debug('too late!')
+        logger.debug('too late!')
         return
     if h < 8:
-        logging.debug('too early?')
+        logger.debug('too early?')
         return
 
-    logging.debug('show time!')
+    logger.debug('show time!')
 
     for f in funcs:
         t = threading.Thread(target=f)
@@ -357,6 +358,8 @@ def Process2():
                 func2 = func
                 func = Loop(func2, interval)
             func()
+
+print(__name__)
 
 if __name__ == '__main__':
     try:
