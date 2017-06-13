@@ -21,10 +21,10 @@ def ListToTuple(list):
 
 
 def UpdateRunning(str):
-    connection = pymysql.connect(host=config['db']['host'],
-                                 user=config['db']['user'],
-                                 passwd=config['db']['pass'],
-                                 db=config['db']['dbname'],
+    connection = pymysql.connect(host=os.environ['MYSQL_PORT_3306_TCP_ADDR'],
+                                 user='root',
+                                 passwd=os.environ['MYSQL_ENV_MYSQL_ROOT_PASSWORD'],
+                                 db='stock',
                                  charset='utf8',
                                  cursorclass=pymysql.cursors.DictCursor)
 
@@ -39,10 +39,10 @@ def UpdateRunning(str):
 
 def GetTickers():
     result = []
-    connection = pymysql.connect(host=config['db']['host'],
-                                 user=config['db']['user'],
-                                 passwd=config['db']['pass'],
-                                 db=config['db']['dbnane'],
+    connection = pymysql.connect(host=os.environ['MYSQL_PORT_3306_TCP_ADDR'],
+                                 user='root',
+                                 passwd=os.environ['MYSQL_ENV_MYSQL_ROOT_PASSWORD'],
+                                 db='stock',
                                  charset='utf8',
                                  cursorclass=pymysql.cursors.DictCursor)
 
@@ -58,12 +58,12 @@ def GetTickers():
 def Store(list, sql):
     list = ListToTuple(list)
 
-    connection = pymysql.connect(host=config['db']['host'],
-                             user=config['db']['user'],
-                             passwd=config['db']['pass'],
-                             db=config['db']['dbname'],
-                             charset='utf8',
-                             cursorclass=pymysql.cursors.DictCursor)
+    connection = pymysql.connect(host=os.environ['MYSQL_PORT_3306_TCP_ADDR'],
+                                 user='root',
+                                 passwd=os.environ['MYSQL_ENV_MYSQL_ROOT_PASSWORD'],
+                                 db='stock',
+                                 charset='utf8',
+                                 cursorclass=pymysql.cursors.DictCursor)
 
     try:
         with connection.cursor() as cursor:
@@ -121,12 +121,12 @@ def News():
     Store(list, sql)
 
 def NewsExists(article_id, article_date):
-    connection = pymysql.connect(host=config['db']['host'],
-                             user=config['db']['user'],
-                             passwd=config['db']['pass'],
-                             db=config['db']['dbname'],
-                             charset='utf8',
-                             cursorclass=pymysql.cursors.DictCursor)
+    connection = pymysql.connect(host=os.environ['MYSQL_PORT_3306_TCP_ADDR'],
+                                 user='root',
+                                 passwd=os.environ['MYSQL_ENV_MYSQL_ROOT_PASSWORD'],
+                                 db='stock',
+                                 charset='utf8',
+                                 cursorclass=pymysql.cursors.DictCursor)
 
     try:
         with connection.cursor() as cursor:
@@ -151,12 +151,12 @@ def GetTodays(section):
         return None
 
     number_of_rows = 0
-    connection = pymysql.connect(host=config['db']['host'],
-                             user=config['db']['user'],
-                             passwd=config['db']['pass'],
-                             db=config['db']['db'],
-                             charset='utf8',
-                             cursorclass=pymysql.cursors.DictCursor)
+    connection = pymysql.connect(host=os.environ['MYSQL_PORT_3306_TCP_ADDR'],
+                                 user='root',
+                                 passwd=os.environ['MYSQL_ENV_MYSQL_ROOT_PASSWORD'],
+                                 db='stock',
+                                 charset='utf8',
+                                 cursorclass=pymysql.cursors.DictCursor)
 
     try:
         with connection.cursor() as cursor:
