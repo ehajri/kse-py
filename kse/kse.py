@@ -258,7 +258,7 @@ def dome():
     if h >= 15:
         logger.debug('too late!')
         return
-    if h < 8:
+    if h < 10:
         logger.debug('too early?')
         return
 
