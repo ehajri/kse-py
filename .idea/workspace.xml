@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="36d62f13-87f8-4fa3-b76c-2e632c331d17" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/kse/kse.py" afterPath="$PROJECT_DIR$/kse/kse.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -21,14 +20,14 @@
       <file leaf-file-name="kse.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/kse/kse.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="180">
-              <caret line="12" column="0" lean-forward="true" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
+            <state relative-caret-position="1839">
+              <caret line="360" column="0" lean-forward="true" selection-start-line="360" selection-start-column="0" selection-end-line="360" selection-end-column="0" />
               <folding>
                 <element signature="e#0#13#0" expanded="true" />
-                <marker date="1497316626000" expanded="true" signature="941:992" ph="UPDATE runni... " />
-                <marker date="1497316626000" expanded="true" signature="1649:1670" ph="SELECT * FRO... Tickers" />
-                <marker date="1497316626000" expanded="true" signature="4749:4823" ph="SELECT COUNT... News" />
-                <marker date="1497316626000" expanded="true" signature="5728:5794" ph="SELECT COUNT... missing_value" />
+                <marker date="1497316769000" expanded="true" signature="941:992" ph="UPDATE runni... " />
+                <marker date="1497316769000" expanded="true" signature="1649:1670" ph="SELECT * FRO... Tickers" />
+                <marker date="1497316769000" expanded="true" signature="4749:4823" ph="SELECT COUNT... News" />
+                <marker date="1497316769000" expanded="true" signature="5728:5794" ph="SELECT COUNT... missing_value" />
               </folding>
             </state>
           </provider>
@@ -209,14 +208,14 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/kse/kse.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="12" column="0" lean-forward="true" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
+        <state relative-caret-position="1839">
+          <caret line="360" column="0" lean-forward="true" selection-start-line="360" selection-start-column="0" selection-end-line="360" selection-end-column="0" />
           <folding>
             <element signature="e#0#13#0" expanded="true" />
-            <marker date="1497316626000" expanded="true" signature="941:992" ph="UPDATE runni... " />
-            <marker date="1497316626000" expanded="true" signature="1649:1670" ph="SELECT * FRO... Tickers" />
-            <marker date="1497316626000" expanded="true" signature="4749:4823" ph="SELECT COUNT... News" />
-            <marker date="1497316626000" expanded="true" signature="5728:5794" ph="SELECT COUNT... missing_value" />
+            <marker date="1497316769000" expanded="true" signature="941:992" ph="UPDATE runni... " />
+            <marker date="1497316769000" expanded="true" signature="1649:1670" ph="SELECT * FRO... Tickers" />
+            <marker date="1497316769000" expanded="true" signature="4749:4823" ph="SELECT COUNT... News" />
+            <marker date="1497316769000" expanded="true" signature="5728:5794" ph="SELECT COUNT... missing_value" />
           </folding>
         </state>
       </provider>

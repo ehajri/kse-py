@@ -359,8 +359,6 @@ def Process2():
                 func = Loop(func2, interval)
             func()
 
-print(__name__)
-
 if __name__ == '__main__':
     try:
         Process()
