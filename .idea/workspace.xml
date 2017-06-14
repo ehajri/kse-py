@@ -2,10 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="36d62f13-87f8-4fa3-b76c-2e632c331d17" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/kse-py.iml" afterPath="$PROJECT_DIR$/.idea/kse-py.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/kse/func.py" afterPath="$PROJECT_DIR$/kse/func.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/kse/kse.py" afterPath="$PROJECT_DIR$/kse/kse.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -39,40 +35,39 @@
       <file leaf-file-name="kse.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/kse/kse.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="662">
-              <caret line="384" column="0" lean-forward="false" selection-start-line="384" selection-start-column="0" selection-end-line="384" selection-end-column="0" />
+            <state relative-caret-position="180">
+              <caret line="12" column="26" lean-forward="false" selection-start-line="11" selection-start-column="0" selection-end-line="12" selection-end-column="26" />
               <folding>
                 <element signature="e#0#13#0" expanded="true" />
                 <element signature="e#405#482#0" expanded="false" />
                 <element signature="e#513#627#0" expanded="false" />
                 <element signature="e#654#702#0" expanded="false" />
                 <element signature="e#727#1337#0" expanded="false" />
-                <element signature="e#1366#2092#0" expanded="false" />
-                <element signature="e#2116#2874#0" expanded="false" />
-                <element signature="e#2893#3795#0" expanded="false" />
-                <element signature="e#3844#3962#0" expanded="false" />
-                <element signature="e#4007#4876#0" expanded="false" />
-                <element signature="e#4895#5631#0" expanded="false" />
-                <element signature="e#5805#6334#0" expanded="false" />
-                <element signature="e#6357#6940#0" expanded="false" />
-                <element signature="e#6984#7191#0" expanded="false" />
-                <element signature="e#7247#7452#0" expanded="false" />
-                <element signature="e#7507#7768#0" expanded="false" />
-                <element signature="e#7817#8104#0" expanded="false" />
-                <element signature="e#8154#8424#0" expanded="false" />
-                <element signature="e#8471#8689#0" expanded="false" />
-                <element signature="e#8708#8759#0" expanded="false" />
-                <element signature="e#8789#8974#0" expanded="false" />
-                <element signature="e#8996#9012#0" expanded="false" />
-                <element signature="e#9031#9444#0" expanded="false" />
-                <element signature="e#9463#9747#0" expanded="false" />
-                <element signature="e#9766#10035#0" expanded="false" />
-                <element signature="e#10054#10313#0" expanded="false" />
-                <element signature="e#10332#10600#0" expanded="false" />
-                <element signature="e#10671#11947#0" expanded="false" />
-                <element signature="e#11980#12147#0" expanded="false" />
-                <marker date="1497386067000" expanded="true" signature="1185:1206" ph="SELECT * FRO... Tickers" />
-                <marker date="1497386067000" expanded="true" signature="4608:4674" ph="SELECT COUNT... missing_value" />
+                <element signature="e#2114#2870#0" expanded="false" />
+                <element signature="e#2889#3788#0" expanded="false" />
+                <element signature="e#3837#3955#0" expanded="false" />
+                <element signature="e#4000#4869#0" expanded="false" />
+                <element signature="e#4888#5623#0" expanded="false" />
+                <element signature="e#5797#6326#0" expanded="false" />
+                <element signature="e#6349#6929#0" expanded="false" />
+                <element signature="e#6973#7180#0" expanded="false" />
+                <element signature="e#7236#7441#0" expanded="false" />
+                <element signature="e#7496#7757#0" expanded="false" />
+                <element signature="e#7806#8093#0" expanded="false" />
+                <element signature="e#8143#8413#0" expanded="false" />
+                <element signature="e#8460#8678#0" expanded="false" />
+                <element signature="e#8697#8748#0" expanded="false" />
+                <element signature="e#8778#8963#0" expanded="false" />
+                <element signature="e#8985#9001#0" expanded="false" />
+                <element signature="e#9020#9429#0" expanded="false" />
+                <element signature="e#9448#9732#0" expanded="false" />
+                <element signature="e#9751#10020#0" expanded="false" />
+                <element signature="e#10039#10298#0" expanded="false" />
+                <element signature="e#10317#10585#0" expanded="false" />
+                <element signature="e#10656#11932#0" expanded="false" />
+                <element signature="e#11965#12132#0" expanded="false" />
+                <marker date="1497425489000" expanded="true" signature="1185:1206" ph="SELECT * FRO... Tickers" />
+                <marker date="1497425489000" expanded="true" signature="4601:4667" ph="SELECT COUNT... missing_value" />
               </folding>
             </state>
           </provider>
@@ -104,7 +99,11 @@
     <findStrings>
       <find>GetToday</find>
       <find>GetTodays</find>
+      <find>logging</find>
     </findStrings>
+    <replaceStrings>
+      <replace>logger</replace>
+    </replaceStrings>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -144,7 +143,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -173,6 +171,7 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scope" />
       <pane id="Scratches" />
     </panes>
   </component>
@@ -415,9 +414,9 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1440" height="812" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2553648" sideWeight="0.49514562" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25894135" sideWeight="0.49514562" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32918397" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -452,6 +451,16 @@
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/kse/func.py">
       <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#15#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/kse/func.py">
+      <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="240">
           <caret line="18" column="19" lean-forward="false" selection-start-line="18" selection-start-column="19" selection-end-line="18" selection-end-column="19" />
           <folding>
@@ -470,32 +479,31 @@
             <element signature="e#513#627#0" expanded="false" />
             <element signature="e#654#702#0" expanded="false" />
             <element signature="e#727#1337#0" expanded="false" />
-            <element signature="e#1366#2092#0" expanded="false" />
-            <element signature="e#2116#2874#0" expanded="false" />
-            <element signature="e#2893#3795#0" expanded="false" />
-            <element signature="e#3844#3962#0" expanded="false" />
-            <element signature="e#4007#4876#0" expanded="false" />
-            <element signature="e#4895#5631#0" expanded="false" />
-            <element signature="e#5805#6334#0" expanded="false" />
-            <element signature="e#6357#6940#0" expanded="false" />
-            <element signature="e#6984#7191#0" expanded="false" />
-            <element signature="e#7247#7452#0" expanded="false" />
-            <element signature="e#7507#7768#0" expanded="false" />
-            <element signature="e#7817#8104#0" expanded="false" />
-            <element signature="e#8154#8424#0" expanded="false" />
-            <element signature="e#8471#8689#0" expanded="false" />
-            <element signature="e#8708#8759#0" expanded="false" />
-            <element signature="e#8789#8974#0" expanded="false" />
-            <element signature="e#8996#9012#0" expanded="false" />
-            <element signature="e#9031#9444#0" expanded="false" />
-            <element signature="e#9463#9747#0" expanded="false" />
-            <element signature="e#9766#10035#0" expanded="false" />
-            <element signature="e#10054#10313#0" expanded="false" />
-            <element signature="e#10332#10600#0" expanded="false" />
-            <element signature="e#10671#11947#0" expanded="false" />
-            <element signature="e#11980#12147#0" expanded="false" />
-            <marker date="1497386067000" expanded="true" signature="1185:1206" ph="SELECT * FRO... Tickers" />
-            <marker date="1497386067000" expanded="true" signature="4608:4674" ph="SELECT COUNT... missing_value" />
+            <element signature="e#2114#2870#0" expanded="false" />
+            <element signature="e#2889#3788#0" expanded="false" />
+            <element signature="e#3837#3955#0" expanded="false" />
+            <element signature="e#4000#4869#0" expanded="false" />
+            <element signature="e#4888#5623#0" expanded="false" />
+            <element signature="e#5797#6326#0" expanded="false" />
+            <element signature="e#6349#6929#0" expanded="false" />
+            <element signature="e#6973#7180#0" expanded="false" />
+            <element signature="e#7236#7441#0" expanded="false" />
+            <element signature="e#7496#7757#0" expanded="false" />
+            <element signature="e#7806#8093#0" expanded="false" />
+            <element signature="e#8143#8413#0" expanded="false" />
+            <element signature="e#8460#8678#0" expanded="false" />
+            <element signature="e#8697#8748#0" expanded="false" />
+            <element signature="e#8778#8963#0" expanded="false" />
+            <element signature="e#8985#9001#0" expanded="false" />
+            <element signature="e#9020#9429#0" expanded="false" />
+            <element signature="e#9448#9732#0" expanded="false" />
+            <element signature="e#9751#10020#0" expanded="false" />
+            <element signature="e#10039#10298#0" expanded="false" />
+            <element signature="e#10317#10585#0" expanded="false" />
+            <element signature="e#10656#11932#0" expanded="false" />
+            <element signature="e#11965#12132#0" expanded="false" />
+            <marker date="1497425489000" expanded="true" signature="1185:1206" ph="SELECT * FRO... Tickers" />
+            <marker date="1497425489000" expanded="true" signature="4601:4667" ph="SELECT COUNT... missing_value" />
           </folding>
         </state>
       </provider>
@@ -536,32 +544,31 @@
             <element signature="e#513#627#0" expanded="false" />
             <element signature="e#654#702#0" expanded="false" />
             <element signature="e#727#1337#0" expanded="false" />
-            <element signature="e#1366#2092#0" expanded="false" />
-            <element signature="e#2116#2874#0" expanded="false" />
-            <element signature="e#2893#3795#0" expanded="false" />
-            <element signature="e#3844#3962#0" expanded="false" />
-            <element signature="e#4007#4876#0" expanded="false" />
-            <element signature="e#4895#5631#0" expanded="false" />
-            <element signature="e#5805#6334#0" expanded="false" />
-            <element signature="e#6357#6940#0" expanded="false" />
-            <element signature="e#6984#7191#0" expanded="false" />
-            <element signature="e#7247#7452#0" expanded="false" />
-            <element signature="e#7507#7768#0" expanded="false" />
-            <element signature="e#7817#8104#0" expanded="false" />
-            <element signature="e#8154#8424#0" expanded="false" />
-            <element signature="e#8471#8689#0" expanded="false" />
-            <element signature="e#8708#8759#0" expanded="false" />
-            <element signature="e#8789#8974#0" expanded="false" />
-            <element signature="e#8996#9012#0" expanded="false" />
-            <element signature="e#9031#9444#0" expanded="false" />
-            <element signature="e#9463#9747#0" expanded="false" />
-            <element signature="e#9766#10035#0" expanded="false" />
-            <element signature="e#10054#10313#0" expanded="false" />
-            <element signature="e#10332#10600#0" expanded="false" />
-            <element signature="e#10671#11947#0" expanded="false" />
-            <element signature="e#11980#12147#0" expanded="false" />
-            <marker date="1497386067000" expanded="true" signature="1185:1206" ph="SELECT * FRO... Tickers" />
-            <marker date="1497386067000" expanded="true" signature="4608:4674" ph="SELECT COUNT... missing_value" />
+            <element signature="e#2114#2870#0" expanded="false" />
+            <element signature="e#2889#3788#0" expanded="false" />
+            <element signature="e#3837#3955#0" expanded="false" />
+            <element signature="e#4000#4869#0" expanded="false" />
+            <element signature="e#4888#5623#0" expanded="false" />
+            <element signature="e#5797#6326#0" expanded="false" />
+            <element signature="e#6349#6929#0" expanded="false" />
+            <element signature="e#6973#7180#0" expanded="false" />
+            <element signature="e#7236#7441#0" expanded="false" />
+            <element signature="e#7496#7757#0" expanded="false" />
+            <element signature="e#7806#8093#0" expanded="false" />
+            <element signature="e#8143#8413#0" expanded="false" />
+            <element signature="e#8460#8678#0" expanded="false" />
+            <element signature="e#8697#8748#0" expanded="false" />
+            <element signature="e#8778#8963#0" expanded="false" />
+            <element signature="e#8985#9001#0" expanded="false" />
+            <element signature="e#9020#9429#0" expanded="false" />
+            <element signature="e#9448#9732#0" expanded="false" />
+            <element signature="e#9751#10020#0" expanded="false" />
+            <element signature="e#10039#10298#0" expanded="false" />
+            <element signature="e#10317#10585#0" expanded="false" />
+            <element signature="e#10656#11932#0" expanded="false" />
+            <element signature="e#11965#12132#0" expanded="false" />
+            <marker date="1497425489000" expanded="true" signature="1185:1206" ph="SELECT * FRO... Tickers" />
+            <marker date="1497425489000" expanded="true" signature="4601:4667" ph="SELECT COUNT... missing_value" />
           </folding>
         </state>
       </provider>
@@ -578,22 +585,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/config.ini">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="375">
-          <caret line="25" column="31" lean-forward="false" selection-start-line="25" selection-start-column="31" selection-end-line="25" selection-end-column="31" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/kse/models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="30">
-          <caret line="2" column="9" lean-forward="false" selection-start-line="2" selection-start-column="9" selection-end-line="2" selection-end-column="9" />
           <folding />
         </state>
       </provider>
@@ -610,41 +601,56 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/kse/kse.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="662">
-          <caret line="384" column="0" lean-forward="false" selection-start-line="384" selection-start-column="0" selection-end-line="384" selection-end-column="0" />
+        <state relative-caret-position="180">
+          <caret line="12" column="26" lean-forward="false" selection-start-line="11" selection-start-column="0" selection-end-line="12" selection-end-column="26" />
           <folding>
             <element signature="e#0#13#0" expanded="true" />
             <element signature="e#405#482#0" expanded="false" />
             <element signature="e#513#627#0" expanded="false" />
             <element signature="e#654#702#0" expanded="false" />
             <element signature="e#727#1337#0" expanded="false" />
-            <element signature="e#1366#2092#0" expanded="false" />
-            <element signature="e#2116#2874#0" expanded="false" />
-            <element signature="e#2893#3795#0" expanded="false" />
-            <element signature="e#3844#3962#0" expanded="false" />
-            <element signature="e#4007#4876#0" expanded="false" />
-            <element signature="e#4895#5631#0" expanded="false" />
-            <element signature="e#5805#6334#0" expanded="false" />
-            <element signature="e#6357#6940#0" expanded="false" />
-            <element signature="e#6984#7191#0" expanded="false" />
-            <element signature="e#7247#7452#0" expanded="false" />
-            <element signature="e#7507#7768#0" expanded="false" />
-            <element signature="e#7817#8104#0" expanded="false" />
-            <element signature="e#8154#8424#0" expanded="false" />
-            <element signature="e#8471#8689#0" expanded="false" />
-            <element signature="e#8708#8759#0" expanded="false" />
-            <element signature="e#8789#8974#0" expanded="false" />
-            <element signature="e#8996#9012#0" expanded="false" />
-            <element signature="e#9031#9444#0" expanded="false" />
-            <element signature="e#9463#9747#0" expanded="false" />
-            <element signature="e#9766#10035#0" expanded="false" />
-            <element signature="e#10054#10313#0" expanded="false" />
-            <element signature="e#10332#10600#0" expanded="false" />
-            <element signature="e#10671#11947#0" expanded="false" />
-            <element signature="e#11980#12147#0" expanded="false" />
-            <marker date="1497386067000" expanded="true" signature="1185:1206" ph="SELECT * FRO... Tickers" />
-            <marker date="1497386067000" expanded="true" signature="4608:4674" ph="SELECT COUNT... missing_value" />
+            <element signature="e#2114#2870#0" expanded="false" />
+            <element signature="e#2889#3788#0" expanded="false" />
+            <element signature="e#3837#3955#0" expanded="false" />
+            <element signature="e#4000#4869#0" expanded="false" />
+            <element signature="e#4888#5623#0" expanded="false" />
+            <element signature="e#5797#6326#0" expanded="false" />
+            <element signature="e#6349#6929#0" expanded="false" />
+            <element signature="e#6973#7180#0" expanded="false" />
+            <element signature="e#7236#7441#0" expanded="false" />
+            <element signature="e#7496#7757#0" expanded="false" />
+            <element signature="e#7806#8093#0" expanded="false" />
+            <element signature="e#8143#8413#0" expanded="false" />
+            <element signature="e#8460#8678#0" expanded="false" />
+            <element signature="e#8697#8748#0" expanded="false" />
+            <element signature="e#8778#8963#0" expanded="false" />
+            <element signature="e#8985#9001#0" expanded="false" />
+            <element signature="e#9020#9429#0" expanded="false" />
+            <element signature="e#9448#9732#0" expanded="false" />
+            <element signature="e#9751#10020#0" expanded="false" />
+            <element signature="e#10039#10298#0" expanded="false" />
+            <element signature="e#10317#10585#0" expanded="false" />
+            <element signature="e#10656#11932#0" expanded="false" />
+            <element signature="e#11965#12132#0" expanded="false" />
+            <marker date="1497425489000" expanded="true" signature="1185:1206" ph="SELECT * FRO... Tickers" />
+            <marker date="1497425489000" expanded="true" signature="4601:4667" ph="SELECT COUNT... missing_value" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/kse/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="30">
+          <caret line="2" column="9" lean-forward="false" selection-start-line="2" selection-start-column="9" selection-end-line="2" selection-end-column="9" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/config.ini">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="375">
+          <caret line="25" column="31" lean-forward="false" selection-start-line="25" selection-start-column="31" selection-end-line="25" selection-end-column="31" />
+          <folding />
         </state>
       </provider>
     </entry>
