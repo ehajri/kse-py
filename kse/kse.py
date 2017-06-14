@@ -3,6 +3,7 @@ import func
 import pymysql.cursors
 import sys, os, time, datetime
 import threading, logging
+import stock_models as sm
 
 from configobj import ConfigObj
 
@@ -22,22 +23,16 @@ def ListToTuple(list):
 
 
 def UpdateRunning(str):
-    connection = pymysql.connect(host=os.environ['MYSQL_PORT_3306_TCP_ADDR'],
-                                 user='root',
-                                 passwd=os.environ['MYSQL_ENV_MYSQL_ROOT_PASSWORD'],
-                                 db='stock',
-                                 charset='utf8',
-                                 cursorclass=pymysql.cursors.DictCursor)
+    record = sm.Running.get(sm.Running.funcname == str)
+    record.lastrun = datetime.datetime.now()
+    record.save()
 
-    try:
-        with connection.cursor() as cursor:
-            cursor.execute("UPDATE running SET lastrun = %s WHERE funcname = %s", (datetime.datetime.now(), str))
-            result = cursor.fetchall()
-        connection.commit()
-    finally:
-        connection.close()
-        return result
 
+def GetTickersPW():
+    tickers = sm.Tickers.select()
+    return tickers
+
+  
 def GetTickers():
     result = []
     connection = pymysql.connect(host=os.environ['MYSQL_PORT_3306_TCP_ADDR'],
@@ -55,6 +50,7 @@ def GetTickers():
     finally:
         connection.close()
         return result
+
 
 def Store(list, sql):
     list = ListToTuple(list)
@@ -78,66 +74,60 @@ def Store(list, sql):
     finally:
         connection.close()
 
+
 def LiveStock():
     logger.info("%s Live Stock Listener started!", datetime.datetime.now().time())
     pageContent = func.FetchURL(config['rquotes']['url'])
 
-    list = func.FetchRQuotes(pageContent, config['rquotes']['domId'])
+    livestocklist = func.FetchRQuotes(pageContent, config['rquotes']['domId'])
 
-    if list == None:
+    if livestocklist is None:
         logger.warning("Nothing returned from FetchRQuotes")
     else:
         #list.append([507, 108.000, 8.000, 108.000, 108.000, 108.000, 1, 2, 108.000, 100.000, 100.000, '2017-04-15', 96.000, 0.000]);
-        list = [x for x in list if all(xx != 0 for xx in x[1:9])]
+        livestocklist = [x for x in livestocklist if all(xx != 0 for xx in x[1:9])]
 
-        sql = "INSERT IGNORE INTO `RQuotes` (`ticker_id`, `last`, `change`, `open`, `high`, `low`, `vol`, `trade`, `value`, `prev`, `ref`, `prev_date`, `bid`, `ask`) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
-        Store(list, sql)
+        fields = 'ticker_id last change open high low vol trade value prev ref prev_date bid ask'
+
+        # do_insert_livestock(livestocklist, fields)
+        do_insert_pw(sm.Rquotes, livestocklist, fields.split(' '))
+
 
 def News():
     logger.info("%s News Listener started!" % datetime.datetime.now().time())
     pageContent = func.FetchURL(config['news']['url1'])
 
-    list = func.FetchNews(pageContent, config['news']['domId1'])
+    records = func.FetchNews(pageContent, config['news']['domId1'])
 
-    if list == None:
+    if records is None:
         logger.warning("News did not return anything")
         return
 
-    for i in list:
+    for i in records:
         if NewsExists(i[0], i[2]):
-            list.remove(i)
+            records.remove(i)
 
-    for i in list:
+    for i in records:
         i[2] = i[2].strftime('%Y-%m-%d %H:%M:%S')
         pageContent = func.FetchURL(config['news']['url2'] + str(i[0]))
         temp = func.FetchArticle(pageContent, config['news']['domId2'])
-        if temp == None:
+
+        if temp is None:
             logger.warning("%d returned none" % i[0])
         else:
             # print("%d to insert" % i[0])
             i.append(temp)
 
-    sql = "INSERT IGNORE INTO `News` (`newsid`, `headline`, `date`, `message`) VALUES (%s, %s, %s, %s)"
+    fields = "newsid headline date message"
 
-    Store(list, sql)
+    # do_insert_news(records, fields)
+    do_insert_pw(sm.News, records, fields.split(' '))
+
 
 def NewsExists(article_id, article_date):
-    connection = pymysql.connect(host=os.environ['MYSQL_PORT_3306_TCP_ADDR'],
-                                 user='root',
-                                 passwd=os.environ['MYSQL_ENV_MYSQL_ROOT_PASSWORD'],
-                                 db='stock',
-                                 charset='utf8',
-                                 cursorclass=pymysql.cursors.DictCursor)
+    count = sm.News.select().where(sm.News.id == article_id and sm.News.date == article_date).count()
+    return count > 0
 
-    try:
-        with connection.cursor() as cursor:
-            sql = "SELECT COUNT(*) AS total FROM News WHERE `newsid` = {0} AND `date` = '{1}'".format(article_id, article_date)
-            cursor.execute(sql)
-            number_of_rows = cursor.fetchone()['total']
-        connection.commit()
-    finally:
-        connection.close()
-        return number_of_rows > 0
 
 # not used?
 
@@ -174,27 +164,34 @@ def OBook():
     logger.info("%s OBook Listener started!" % datetime.datetime.now().time())
     pageContent = func.FetchURL(config['obook']['url'])
 
-    list = func.FetchOBook(pageContent, config['obook']['domId'])
+    obooklist = func.FetchOBook(pageContent, config['obook']['domId'])
 
-    if list is None:
+    if obooklist is None:
+        logger.debug('OBook returned nothing')
         return
 
-    for i, a in enumerate(list):
-        list[i] = [(float(x) if x else 0) for x in a]
-        list[i].append(datetime.datetime.today().date())
+    for i, a in enumerate(obooklist):
+        obooklist[i] = [(float(x) if x else 0) for x in a]
+        obooklist[i].append(datetime.datetime.today().date())
 
-    fields = KeysToFields('ticker_id price bid bid_qty ask ask_qty createdon')
+    fields = 'ticker_id price bid bid_qty ask ask_qty createdon'
 
-    if len(list) == 0:
+    if len(obooklist) == 0:
+        logger.debug('OBook has no records')
         return
 
-    sql = "INSERT IGNORE INTO `OBook` (" + fields + ") VALUES (%s, %s, %s, %s, %s, %s, %s)"
-    Store(list, sql)
+    logger.debug('OBook has ' + len(obooklist) + ' and inserting them..')
+
+    do_insert_obook_pw(obooklist, fields.split(' '))
+
 
 def KeysToFields(str):
     list = str.split(' ')
     str = ', '.join("`{0}`".format(w) for w in list)
     return str
+
+# not sure what this is doing
+
 
 def TimeSale2():
     tickers = GetTickers()
@@ -213,38 +210,108 @@ def TimeSale2():
 
     Store(list, sql)
 
+
 def TimeSale():
     logger.info("%s TimeSale Listener started!" % datetime.datetime.now().time())
 
     pageContent = func.FetchURL(config['timesale']['url2'])
 
-    list = func.FetchTimeSale2(pageContent, config['timesale']['domId2'])
+    timesalelist = func.FetchTimeSale2(pageContent, config['timesale']['domId2'])
 
-    if list == None:
+    if timesalelist is None:
         logger.warning("Nothing returned from FetchTimeSale2")
     elif len(list) == 0:
         logger.warning("0 record returned from FetchTimeSale2")
     else:
-        fields = KeysToFields('ticker_id price quantity datetime')
-        sql = "INSERT IGNORE INTO `TimeSale` (" + fields + ") VALUES (%s, %s, %s, %s)"
-        Store(list, sql)
+        fields = 'ticker_id price quantity datetime'
+        # do_insert_timesale(timesalelist, fields)
+        do_insert_timesale_pw(timesalelist, fields.split(' '))
+
+
+def do_insert_news(records, fields):
+    """
+    :param records:
+    :param fields (str):
+    :return:
+    """
+    fields = KeysToFields(fields)
+    sql = "INSERT IGNORE INTO `News` (" + fields + ") VALUES (%s, %s, %s, %s)"
+
+    Store(records, sql)
+
+
+def do_insert_timesale_pw(timesalelist, fields):
+    data_source = [dict.zip(fields, t) for t in timesalelist]
+    with sm.atomic():
+        for idx in range(0, len(data_source), 100):
+            sm.Timesale.insert_many(data_source[idx:idx + 100]).execute()
+
+
+def do_insert_livestock(livestocklist, fields):
+    """
+    :param livestocklist:
+    :param fields (str):
+    :return:
+    """
+    fields = KeysToFields(fields)
+    sql = "INSERT IGNORE INTO `RQuotes` (" + fields + ") VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+    Store(livestocklist, sql)
+
+
+def do_insert_pw(model, records, fields):
+    """
+    :param model:
+    :param records:
+    :param fields (list):
+    :return:
+    """
+    data_source = [dict.zip(fields, t) for t in records]
+    with sm.atomic():
+        for idx in range(0, len(data_source), 100):
+            model.insert_many(data_source[idx:idx + 100]).execute()
+
+
+def do_insert_obook_pw(obooklist, fields):
+    """
+    :param obooklist (list):
+    :param fields (list):
+    """
+    data_source = [dict.zip(fields, t) for t in obooklist]
+    with sm.atomic():
+        for idx in range(0, len(data_source), 100):
+            sm.OBook.insert_many(data_source[idx:idx + 100]).execute()
+
+
+def do_insert_obook(obooklist, fields):
+    """
+    :param obooklist (list):
+    :param fields (str):
+    """
+
+    fields = KeysToFields(fields)
+    sql = "INSERT IGNORE INTO `OBook` (" + fields + ") VALUES (%s, %s, %s, %s, %s, %s, %s)"
+    Store(obooklist, sql)
+
 
 def test():
     print("%s Hello" % datetime.datetime.today().now())
 
+
 def Loop(f, interval):
-  def inner():
-    while True:
-        try:
-            f()
-        except:
-            pass
-        finally:
-            time.sleep(interval)
-  return inner
+    def inner():
+        while True:
+            try:
+                f()
+            except:
+                pass
+            finally:
+                time.sleep(interval)
+    return inner
+
 
 def Process():
     Loop(dome, 10)()
+
 
 def dome():
     t = datetime.datetime.today()
@@ -281,6 +348,7 @@ def Job1():
         UpdateRunning('TimeSale')
         TimeSale()
 
+
 def Job2():
     if lastruns['live'] is None:
         lastruns['live'] = datetime.datetime.now()
@@ -290,6 +358,7 @@ def Job2():
         lastruns['live'] = datetime.datetime.now()
         UpdateRunning('LiveStock')
         LiveStock()
+
 
 def Job3():
     if lastruns['news'] is None:
@@ -301,6 +370,7 @@ def Job3():
         UpdateRunning('News')
         News()
 
+
 def Job4():
     if lastruns['obook'] is None:
         lastruns['obook'] = datetime.datetime.now()
@@ -311,8 +381,11 @@ def Job4():
         UpdateRunning('OBook')
         OBook()
 
-funcs = [Job1, Job2, Job3, Job4]
-#funcs = [Job2]
+
+#funcs = [Job1, Job2, Job3, Job4]
+funcs = [Job4]
+
+
 def Process2():
     if len(sys.argv) < 2:
         print('No argument found.. terminating!')
