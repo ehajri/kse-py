@@ -8,7 +8,7 @@ logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
 def FetchURL(link):
     "Reads the URL and fetch its content"
     f = requests.get(link)
-    soup = BeautifulSoup(f.text)
+    soup = BeautifulSoup(f.text, 'html.parser')
     return soup
 
 def FetchRQuotes(soup, id):
@@ -141,7 +141,7 @@ def FetchTimeSale2(soup, id):
     table = soup.find(id=id)
 
     if table is None:
-        return Nonel
+        return None
 
     trs = table.findAll('tr')
 
