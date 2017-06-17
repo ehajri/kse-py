@@ -1,10 +1,11 @@
+import requests
 from kse import models
 from kse import func
 import pymysql.cursors, peewee
 import sys, os, time, datetime
 import threading, logging
 from kse import stock_models as sm
-
+from bs4 import BeautifulSoup
 from configobj import ConfigObj
 
 logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
@@ -123,6 +124,13 @@ def Loop(f, interval):
     return inner
 
 
+class WebReader:
+    def read(self, link):
+        f = requests.get(link)
+        soup = BeautifulSoup(f.text, 'html.parser')
+        return soup
+
+
 class MyBaseModel:
     def __init__(self):
         self.time = None
@@ -148,21 +156,55 @@ class MyBaseModel:
 
 
 class FetchOBook:
-    def __init__(self, url, domId):
+    def __init__(self, url, domId, web_reader):
         self.url = url
         self.domId = domId
+        self.web_reader = web_reader
 
     def fetch(self):
-        page_content = func.fetch_url(self.url)
-        return func.FetchOBook(page_content, self.domId)
+        page_content = self.web_reader.read(self.url)
+        return self._fetch_obook(page_content, self.domId)
+
+    def _fetch_obook(self, soup, id):
+        """Fetches Orders Book from a soup object"""
+        table = soup.find(id=id)
+
+        if table is None:
+            return None
+        # print(table)
+        trs = table.findAll('tr')
+        if trs is None:
+            return None
+        # print(trs)
+        trs.pop(0)
+        records = []
+        for tr in trs:
+            temp = []
+            # 1st td has the ticker id, so let's fetch it
+            tds = tr.findAll('td')
+            a = tds.pop(0).a
+            ticker = a['href'].split('=')[1].split('&')[0]
+            temp.append(ticker)
+
+            # get the rest of the tds
+            for td in tds:
+                temp.append(func.sanitize(td.text))
+            records.append(temp)
+        return records
+
+
+class Repo:
+    def insert(self, records):
+        pass
 
 
 class OBookModel(MyBaseModel):
-    def __init__(self, running_model: sm.Running, fetch_obook):
+    def __init__(self, running_model: sm.Running, fetch_obook, repo):
         super().__init__()
         self.fields = 'ticker price bid bid_qty ask ask_qty createdon'
         self.running_model = running_model
         self.fetch_obook = fetch_obook
+        self.repo = repo
 
     def fetch(self):
         return self.fetch_obook.fetch()
@@ -181,7 +223,8 @@ class OBookModel(MyBaseModel):
 
     def save(self, records):
         logger.debug('OBook.save is called for %s records.', len(records))
-        do_individual_insert_pw(sm.Obook, records, self.fields.split(' '))
+        #do_individual_insert_pw(sm.Obook, records, self.fields.split(' '))
+        self.repo.insert(records, self.fields.split(' '))
 
     def execute(self):
         logger.debug('executing')

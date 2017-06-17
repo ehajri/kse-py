@@ -32,8 +32,8 @@ def fetch_rquotes(soup, id):
         temp.append(td.a['href'].split('=')[1])
 
         for td in tds:
-            temp.append(Sanitize(td.text))
-        temp = ChangeTypes(temp)
+            temp.append(sanitize(td.text))
+        temp = change_types(temp)
         records.append(temp)
     return records
 
@@ -50,7 +50,7 @@ def fetch_news(soup, id):
         tds = tr.findAll('td')
 
         # 1st td is expected to be something like <td>09:24:35</td>
-        time = Sanitize(tds.pop(0).text).split(':')
+        time = sanitize(tds.pop(0).text).split(':')
         # convert the list of strings to list of ints
         time = [int(i) for i in time]
         # return an time object
@@ -64,63 +64,36 @@ def fetch_news(soup, id):
         # 2nd td is expected to be something like <td><a href='..id=..'>headline</a></td>
         a = tds.pop(0).a
         newsid = a['href'].split('=')[1]
-        headline = Sanitize(a.text)
+        headline = sanitize(a.text)
 
         records.append([int(newsid), headline, date])
     return records
 
 
-def fetch_obook(soup, id):
-    """Fetches Orders Book from a soup object"""
-    table = soup.find(id=id)
-
-    if table is None:
-        return None
-    # print(table)
-    trs = table.findAll('tr')
-    if trs is None:
-        return None
-    # print(trs)
-    trs.pop(0)
-    records = []
-    for tr in trs:
-        temp = []
-        # 1st td has the ticker id, so let's fetch it
-        tds = tr.findAll('td')
-        a        = tds.pop(0).a
-        ticker   = a['href'].split('=')[1].split('&')[0]
-        temp.append(ticker)
-
-        # get the rest of the tds
-        for td in tds:
-            temp.append(Sanitize(td.text))
-        records.append(temp)
-    return records
-
-
-def FetchArticle(soup, id):
-    "Fetches single article from a soup object"
+def fetch_article(soup, id):
+    """Fetches single article from a soup object"""
     div = soup.find(id=id)
     if div == None:
         return None
     return div.text.strip()
 
-def FetchTimeSale(soup, id):
-    "Fetches time and sale from a soup object"
+
+def fetch_timesale(soup, id):
+    """Fetches time and sale from a soup object"""
     table = soup.find(id=id)
 
     trs = table.findAll('tr')
     trs.pop(0)
     trs.pop(len(trs)-1)
-    list = []
+    records = []
     for tr in trs:
         tds = tr.findAll('td')
         tds.pop(0)
-        price = Sanitize(tds.pop(0).text)
+        price = sanitize(tds.pop(0).text)
         price = float(price)
-        quantity = Sanitize(tds.pop(0).text)
+        quantity = sanitize(tds.pop(0).text)
         quantity = float(quantity)
-        time = Sanitize(tds.pop(0).text)
+        time = sanitize(tds.pop(0).text)
 
         # 1st td is expected to be something like <td>09:24:35</td>
         time = time.split(':')
@@ -134,12 +107,13 @@ def FetchTimeSale(soup, id):
 
         date = datetime.datetime.combine(dt, time)
 
-        list.append([price, quantity, date])
+        records.append([price, quantity, date])
 
-    return list
+    return records
 
-def FetchTimeSale2(soup, id):
-    "Fetches time and sale from a soup object"
+
+def fetch_timesale2(soup, id):
+    """Fetches time and sale from a soup object"""
     table = soup.find(id=id)
 
     if table is None:
@@ -152,18 +126,18 @@ def FetchTimeSale2(soup, id):
 
     trs.pop(0)
     trs.pop(len(trs)-1)
-    list = []
+    records = []
     for tr in trs:
         tds = tr.findAll('td')
         a        = tds.pop(0).a
         ticker   = a['href'].split('=')[1].split('&')[0]
         ticker   = int(ticker)
 
-        price = Sanitize(tds.pop(0).text)
+        price = sanitize(tds.pop(0).text)
         price = float(price)
-        quantity = Sanitize(tds.pop(0).text)
+        quantity = sanitize(tds.pop(0).text)
         quantity = float(quantity)
-        time = Sanitize(tds.pop(0).text)
+        time = sanitize(tds.pop(0).text)
 
         # 1st td is expected to be something like <td>09:24:35</td>
         time = time.split(':')
@@ -177,31 +151,33 @@ def FetchTimeSale2(soup, id):
 
         date = datetime.datetime.combine(dt, time)
 
-        list.append([ticker, price, quantity, date])
+        records.append([ticker, price, quantity, date])
 
-    return list
+    return records
 
-def Sanitize(str):
+
+def sanitize(str):
     return str.strip().replace(',', '')
 
-def ChangeTypes(list):
+
+def change_types(records):
     try:
         for i in [0, 6, 7]:
-            list[i] = 0 if not list[i] else int(list[i])
+            records[i] = 0 if not records[i] else int(records[i])
         for i in [1, 2, 3, 4, 5, 8, 9, 10, 12, 13]:
-            list[i] = 0 if not list[i] else float(list[i])
+            records[i] = 0 if not records[i] else float(records[i])
 
-        list[11] = datetime.datetime.strptime(list[11], "%d-%m-%Y").date()
-        return list
+        records[11] = datetime.datetime.strptime(records[11], "%d-%m-%Y").date()
+        return records
     except:
-        logging.warning(list)
+        logging.warning(records)
         pass
     return None
 
 
-def MakeDict(list, names):
+def make_dict(records, names):
     listofdict = []
-    for outer in list:
+    for outer in records:
         dict = {}
         for i, r in enumerate(outer):
             dict[names[i]] = r
