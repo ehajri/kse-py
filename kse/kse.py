@@ -147,17 +147,25 @@ class MyBaseModel:
         print('do nothing, base execute')
 
 
-class OBookModel(MyBaseModel):
-    def __init__(self, url, domId, running_model: sm.Running):
-        super().__init__()
+class FetchOBook:
+    def __init__(self, url, domId):
         self.url = url
         self.domId = domId
-        self.fields = 'ticker price bid bid_qty ask ask_qty createdon'
-        self.running_model = running_model
 
     def fetch(self):
-        pageContent = func.FetchURL(self.url)
-        return func.FetchOBook(pageContent, self.domId)
+        page_content = func.FetchURL(self.url)
+        return func.FetchOBook(page_content, self.domId)
+
+
+class OBookModel(MyBaseModel):
+    def __init__(self, running_model: sm.Running, fetch_obook):
+        super().__init__()
+        self.fields = 'ticker price bid bid_qty ask ask_qty createdon'
+        self.running_model = running_model
+        self.fetch_obook = fetch_obook
+
+    def fetch(self):
+        return self.fetch_obook.fetch()
 
     def process(self, records):
         if records is None:
@@ -182,8 +190,8 @@ class OBookModel(MyBaseModel):
         self.save(records)
 
 #funcs = [Job1, Job2, Job3, Job4]
-obook_obj = OBookModel(config['obook']['url'], config['obook']['domId'], sm.Running.get(sm.Running.funcname == 'OBook'))
-funcs = [obook_obj.run]
+#obook_obj = OBookModel(config['obook']['url'], config['obook']['domId'], sm.Running.get(sm.Running.funcname == 'OBook'))
+#funcs = [obook_obj.run]
 
 
 def dome():
@@ -218,14 +226,14 @@ def Process():
     logger.debug('Process started')
     Loop(dome, 10)()
 
-print(obook_obj.__dict__)
+#print(obook_obj.__dict__)
 
-if __name__ == '__main__':
-    try:
-        Process()
-    except KeyboardInterrupt:
-        print('Interrupt')
-        try:
-            sys.exit(0)
-        except SystemExit:
-            os._exit(0)
+# if __name__ == '__main__':
+#     try:
+#         Process()
+#     except KeyboardInterrupt:
+#         print('Interrupt')
+#         try:
+#             sys.exit(0)
+#         except SystemExit:
+#             os._exit(0)
