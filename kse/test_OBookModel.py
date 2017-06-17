@@ -1,7 +1,7 @@
 from kse.kse import *
 import unittest
 from bs4 import BeautifulSoup
-
+from datetime import datetime
 
 class TestFetchOBook(unittest.TestCase):
     def setUp(self):
@@ -10,7 +10,7 @@ class TestFetchOBook(unittest.TestCase):
     def tearDown(self):
         self.fetch_obook = None
 
-    def should_return_appropriate_list(self):
+    def test_should_return_appropriate_list(self):
         self.assertEqual([['123', '1212', '1.2', '1000', '1.1', '50000', '']], self.fetch_obook.fetch())
 
 
@@ -23,11 +23,20 @@ class TestOBookModel(unittest.TestCase):
         self.fetch_obook = None
         self.obook_model = None
 
-    def fetching_obook_is_correct(self):
+    def test_fetching_obook_is_correct(self):
         self.assertEqual([['123', '1212', '1.2', '1000', '1.1', '50000', '']], self.obook_model.fetch())
 
-    def processing_obook_record_is_correct(self):
-        pass
+    def test_processing_obook_record_is_correct(self):
+        records = self.obook_model.fetch()
+        p = self.obook_model.process(records)[0]
+
+        self.assertEqual(123, p[0])
+        self.assertEqual(1212, p[1])
+        self.assertEqual(1.2, p[2])
+        self.assertEqual(1000, p[3])
+        self.assertEqual(1.1, p[4])
+        self.assertEqual(50000, p[5])
+        self.assertEqual(datetime.today().date(), p[7])
 
 
 class MockObookWebReader:
