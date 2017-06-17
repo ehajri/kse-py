@@ -3,16 +3,15 @@ import datetime, sys, logging
 from bs4 import BeautifulSoup
 
 
-logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
-
-def FetchURL(link):
-    "Reads the URL and fetch its content"
+def fetch_url(link):
+    """Reads the URL and fetch its content"""
     f = requests.get(link)
     soup = BeautifulSoup(f.text, 'html.parser')
     return soup
 
-def FetchRQuotes(soup, id):
-    "Fetches RQuotes records from a soup object"
+
+def fetch_rquotes(soup, id):
+    """Fetches RQuotes records from a soup object"""
     table = soup.find(id=id)
 
     if not table or table is None:
@@ -24,7 +23,7 @@ def FetchRQuotes(soup, id):
         return None
 
     trs.pop(0)
-    list = []
+    records = []
     for tr in trs:
         tds = tr.findAll('td')
         temp = []
@@ -35,17 +34,18 @@ def FetchRQuotes(soup, id):
         for td in tds:
             temp.append(Sanitize(td.text))
         temp = ChangeTypes(temp)
-        list.append(temp)
-    return list
+        records.append(temp)
+    return records
 
-def FetchNews(soup, id):
-    "Fetches RQuotes records from a soup object"
+
+def fetch_news(soup, id):
+    """Fetches RQuotes records from a soup object"""
     table = soup.find(id=id)
     trs = table.findAll('tr')
     if len(trs) < 2:
         return None
     trs.pop(0)
-    list = []
+    records = []
     for tr in trs:
         tds = tr.findAll('td')
 
@@ -56,32 +56,33 @@ def FetchNews(soup, id):
         # return an time object
         time = datetime.time(time[0], time[1], time[2])
 
-        #dt = datetime.datetime(2015, 4, 30)
+        # dt = datetime.datetime(2015, 4, 30)
         dt = datetime.datetime.now()
 
         date = datetime.datetime.combine(dt, time)
 
         # 2nd td is expected to be something like <td><a href='..id=..'>headline</a></td>
-        a        = tds.pop(0).a
-        newsid   = a['href'].split('=')[1]
+        a = tds.pop(0).a
+        newsid = a['href'].split('=')[1]
         headline = Sanitize(a.text)
 
-        list.append([int(newsid), headline, date])
-    return list
+        records.append([int(newsid), headline, date])
+    return records
 
-def FetchOBook(soup, id):
-    "Fetches Orders Book from a soup object"
+
+def fetch_obook(soup, id):
+    """Fetches Orders Book from a soup object"""
     table = soup.find(id=id)
 
     if table is None:
         return None
-    #print(table)
+    # print(table)
     trs = table.findAll('tr')
     if trs is None:
         return None
-    #print(trs)
+    # print(trs)
     trs.pop(0)
-    list = []
+    records = []
     for tr in trs:
         temp = []
         # 1st td has the ticker id, so let's fetch it
@@ -93,8 +94,9 @@ def FetchOBook(soup, id):
         # get the rest of the tds
         for td in tds:
             temp.append(Sanitize(td.text))
-        list.append(temp)
-    return list
+        records.append(temp)
+    return records
+
 
 def FetchArticle(soup, id):
     "Fetches single article from a soup object"

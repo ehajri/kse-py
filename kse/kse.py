@@ -1,9 +1,9 @@
-import models
-import func
+from kse import models
+from kse import func
 import pymysql.cursors, peewee
 import sys, os, time, datetime
 import threading, logging
-import stock_models as sm
+from kse import stock_models as sm
 
 from configobj import ConfigObj
 
@@ -153,7 +153,7 @@ class FetchOBook:
         self.domId = domId
 
     def fetch(self):
-        page_content = func.FetchURL(self.url)
+        page_content = func.fetch_url(self.url)
         return func.FetchOBook(page_content, self.domId)
 
 
