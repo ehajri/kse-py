@@ -1,6 +1,6 @@
 from kse.kse import MyBaseModel
 from kse import stock_models as sm
-from datetime import datetime
+import datetime
 from kse import func, kse
 
 

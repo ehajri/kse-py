@@ -130,7 +130,6 @@ def change_types(records):
         return records
     except:
         logging.warning(records)
-        pass
     return None
 
 
