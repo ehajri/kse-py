@@ -198,39 +198,10 @@ class Repo:
         pass
 
 
-class OBookModel(MyBaseModel):
-    def __init__(self, running_model: sm.Running, fetch_obook, repo):
-        super().__init__()
-        self.fields = 'ticker price bid bid_qty ask ask_qty createdon'
-        self.running_model = running_model
-        self.fetch_obook = fetch_obook
-        self.repo = repo
 
-    def fetch(self):
-        return self.fetch_obook.fetch()
 
-    def process(self, records):
-        if records is None:
-            logger.warning('OBook.process: no record passed')
-            return
 
-        for i, a in enumerate(records):
-            # cleaning the records, and appending date at end of the record
-            records[i] = [(float(x) if x else 0) for x in a]
-            records[i].append(datetime.datetime.today().date())
 
-        return records
-
-    def save(self, records):
-        logger.debug('OBook.save is called for %s records.', len(records))
-        #do_individual_insert_pw(sm.Obook, records, self.fields.split(' '))
-        self.repo.insert(records, self.fields.split(' '))
-
-    def execute(self):
-        logger.debug('executing')
-        records = self.fetch()
-        records = self.process(records)
-        self.save(records)
 
 #funcs = [Job1, Job2, Job3, Job4]
 #obook_obj = OBookModel(config['obook']['url'], config['obook']['domId'], sm.Running.get(sm.Running.funcname == 'OBook'))

@@ -112,48 +112,7 @@ def fetch_timesale(soup, id):
     return records
 
 
-def fetch_timesale2(soup, id):
-    """Fetches time and sale from a soup object"""
-    table = soup.find(id=id)
 
-    if table is None:
-        return None
-
-    trs = table.findAll('tr')
-
-    if trs is None or len(trs) == 1:
-        return None
-
-    trs.pop(0)
-    trs.pop(len(trs)-1)
-    records = []
-    for tr in trs:
-        tds = tr.findAll('td')
-        a        = tds.pop(0).a
-        ticker   = a['href'].split('=')[1].split('&')[0]
-        ticker   = int(ticker)
-
-        price = sanitize(tds.pop(0).text)
-        price = float(price)
-        quantity = sanitize(tds.pop(0).text)
-        quantity = float(quantity)
-        time = sanitize(tds.pop(0).text)
-
-        # 1st td is expected to be something like <td>09:24:35</td>
-        time = time.split(':')
-        # convert the list of strings to list of ints
-        time = [int(i) for i in time]
-        # return an time object
-        time = datetime.time(time[0], time[1], time[2])
-
-        #dt = datetime.datetime(2015, 4, 30)
-        dt = datetime.datetime.now()
-
-        date = datetime.datetime.combine(dt, time)
-
-        records.append([ticker, price, quantity, date])
-
-    return records
 
 
 def sanitize(str):

@@ -2,6 +2,8 @@ from kse.kse import *
 import unittest
 from bs4 import BeautifulSoup
 from datetime import datetime
+from kse.Obook import OBookModel
+
 
 class TestFetchOBook(unittest.TestCase):
     def setUp(self):

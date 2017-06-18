@@ -175,7 +175,7 @@ def TimeSale():
     elif len(list) == 0:
         logger.warning("0 record returned from FetchTimeSale2")
     else:
-        fields = 'ticker_id price quantity datetime'
+        fields = ''
         # do_insert_timesale(timesalelist, fields)
         do_insert_timesale_pw(timesalelist, fields.split(' '))
 
