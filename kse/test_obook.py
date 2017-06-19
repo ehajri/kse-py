@@ -2,7 +2,7 @@ from kse.kse import *
 import unittest
 from bs4 import BeautifulSoup
 from datetime import datetime
-from kse.Obook import OBookModel
+from kse.Obook import OBookModel, FetchOBook
 
 
 class TestFetchOBook(unittest.TestCase):

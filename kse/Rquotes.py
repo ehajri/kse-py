@@ -40,3 +40,36 @@ class FetchRquotes:
             temp = func.change_types(temp)
             records.append(temp)
         return records
+
+
+class RquotesModel(MyBaseModel):
+    def __init__(self, running_model: sm.Rquotes, fetch_rquotes, repo):
+        super().__init__()
+        self.fields = 'ticker_id last change open high low vol trade value prev ref prev_date bid ask'
+        self.running_model = running_model
+        self.fetch_rquotes = fetch_rquotes
+        self.repo = repo
+
+    def fetch(self):
+        return self.fetch_rquotes.fetch()
+
+    def process(self, records):
+        kse.logger.info("%s TimeSale Listener started!" % datetime.datetime.now().time())
+
+        if records is None:
+            kse.logger.warning("Nothing returned from FetchRQuotes")
+            return None
+        else:
+            # list.append([507, 108.000, 8.000, 108.000, 108.000, 108.000, 1, 2, 108.000, 100.000, 100.000, '2017-04-15', 96.000, 0.000]);
+            records = [x for x in records if all(xx != 0 for xx in x[1:9])]
+            return records
+
+    def save(self, records):
+        kse.logger.debug('Rquotes.save is called for %s records.', len(records))
+        kse.do_bulk_insert_pw(sm.Rquotes, records, self.fields.split(' '))
+
+    def execute(self):
+        kse.logger.debug('executing')
+        records = self.fetch()
+        records = self.process(records)
+        self.save(records)

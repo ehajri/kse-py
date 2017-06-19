@@ -112,9 +112,6 @@ def fetch_timesale(soup, id):
     return records
 
 
-
-
-
 def sanitize(str):
     return str.strip().replace(',', '')
 
@@ -128,8 +125,8 @@ def change_types(records):
 
         records[11] = datetime.datetime.strptime(records[11], "%d-%m-%Y").date()
         return records
-    except:
-        logging.warning(records)
+    except Exception as e:
+        logging.warning(records, str(e))
     return None
 
 
