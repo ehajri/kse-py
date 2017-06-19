@@ -5,9 +5,11 @@ from kse import func, kse
 
 
 class FetchNews:
-    def __init__(self, url, domId, web_reader):
+    def __init__(self, url, domId, url2, domId2,  web_reader):
         self.url = url
         self.domId = domId
+        self.url2 = url2
+        self.domId2 = domId2
         self.web_reader = web_reader
 
     def fetch(self):
@@ -45,6 +47,13 @@ class FetchNews:
             records.append([int(newsid), headline, date])
         return records
 
+    def fetch2(self):
+        pass
+
+    def _fetch_news2(self, soup, id):
+        pass
+
+
 class NewsModel(MyBaseModel):
     def __init__(self, running_model: sm.News, fetch_news, repo):
         super().__init()
@@ -57,10 +66,37 @@ class NewsModel(MyBaseModel):
         return self.fetch_news.fetch()
 
     def process(self, records):
-        pass
+        kse.logger.info("%s News Listener started!" % datetime.datetime.now().time())
+
+        if records is None:
+            kse.logger.warning("News did not return anything")
+            return
+
+        for i in records:
+            if self._is_existed(i[0], i[2]):
+                records.remove(i)
+
+        for i in records:
+            i[2] = i[2].strftime('%Y-%m-%d %H:%M:%S')
+            # i[0] is the id for the news
+
+            temp = self.fetch_news.fetch2()
+
+            if temp is None or temp == '':
+                kse.logger.warning("%d returned none" % i[0])
+                i.append('')
+            else:
+                # print("%d to insert" % i[0])
+                i.append(temp)
+        return records
+
+    def _is_existed(article_id, article_date):
+        count = sm.db.News.select().where(sm.db.News.id == article_id and sm.db.News.date == article_date).count()
+        return count > 0
 
     def save(self, records):
-        pass
+        # do_insert_news(records, fields)
+        kse.do_bulk_insert_pw(sm.db.News, records, self.fields.split(' '))
 
     def execute(self):
         pass
