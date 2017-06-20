@@ -2,7 +2,7 @@ from kse.kse import *
 import unittest
 from bs4 import BeautifulSoup
 from datetime import datetime
-from kse.Obook import OBookModel, FetchOBook
+from kse.Obook import ObookModel, FetchObook
 
 
 class TestFetchOBook(unittest.TestCase):
@@ -19,7 +19,7 @@ class TestFetchOBook(unittest.TestCase):
 class TestOBookModel(unittest.TestCase):
     def setUp(self):
         self.fetch_obook = FetchOBook("", "myid", MockObookWebReader())
-        self.obook_model = OBookModel(None, self.fetch_obook, "")
+        self.obook_model = ObookModel(None, self.fetch_obook, "")
 
     def tearDown(self):
         self.fetch_obook = None

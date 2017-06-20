@@ -155,43 +155,6 @@ class MyBaseModel:
         print('do nothing, base execute')
 
 
-class FetchOBook:
-    def __init__(self, url, domId, web_reader):
-        self.url = url
-        self.domId = domId
-        self.web_reader = web_reader
-
-    def fetch(self):
-        page_content = self.web_reader.read(self.url)
-        return self._fetch_obook(page_content, self.domId)
-
-    def _fetch_obook(self, soup, id):
-        """Fetches Orders Book from a soup object"""
-        table = soup.find(id=id)
-
-        if table is None:
-            return None
-        # print(table)
-        trs = table.findAll('tr')
-        if trs is None:
-            return None
-        # print(trs)
-        trs.pop(0)
-        records = []
-        for tr in trs:
-            temp = []
-            # 1st td has the ticker id, so let's fetch it
-            tds = tr.findAll('td')
-            a = tds.pop(0).a
-            ticker = a['href'].split('=')[1].split('&')[0]
-            temp.append(ticker)
-
-            # get the rest of the tds
-            for td in tds:
-                temp.append(func.sanitize(td.text))
-            records.append(temp)
-        return records
-
 
 class Repo:
     def insert(self, records):

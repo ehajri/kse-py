@@ -4,7 +4,7 @@ import datetime
 from kse import func, kse
 
 
-class FetchOBook:
+class FetchObook:
     def __init__(self, url, domId, web_reader):
         self.url = url
         self.domId = domId
@@ -42,7 +42,7 @@ class FetchOBook:
         return records
 
 
-class OBookModel(MyBaseModel):
+class ObookModel(MyBaseModel):
     def __init__(self, running_model: sm.Running, fetch_obook, repo):
         super().__init__()
         self.fields = 'ticker price bid bid_qty ask ask_qty createdon'
