@@ -43,10 +43,10 @@ class FetchObook:
 
 
 class ObookModel(MyBaseModel):
-    def __init__(self, running_model: sm.Running, fetch_obook, repo):
+    def __init__(self, fetch_obook, repo):
         super().__init__()
         self.fields = 'ticker price bid bid_qty ask ask_qty createdon'
-        self.running_model = running_model
+        self.running_model = sm.Running
         self.fetch_obook = fetch_obook
         self.repo = repo
 
@@ -67,7 +67,8 @@ class ObookModel(MyBaseModel):
 
     def save(self, records):
         kse.logger.debug('OBook.save is called for %s records.', len(records))
-        kse.do_individual_insert_pw(sm.Obook, records, self.fields.split(' '))
+        #kse.do_individual_insert_pw(sm.Obook, records, self.fields.split(' '))
+        self.repo.insert_many(records)
         # self.repo.insert(records, self.fields.split(' '))
 
     def execute(self):
