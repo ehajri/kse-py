@@ -6,7 +6,7 @@ import os
 #                          'port': 3306, 'user': 'root', 'password': os.environ['MYSQL_ENV_MYSQL_ROOT_PASSWORD']})
 
 db = MySQLDatabase('stock', **{'host': '127.0.0.1',
-                         'port': 6033, 'user': 'root', 'password': 'passwd'})
+                         'port': 6603, 'user': 'root', 'password': 'passwd'})
 
 class UnknownField(object):
     def __init__(self, *_, **__): pass
