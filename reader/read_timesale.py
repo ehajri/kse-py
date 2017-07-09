@@ -2,8 +2,9 @@ from common import *
 
 
 def read_timesale():
-    url = config['timesale']['url1']
-    dom_id = config['timesale']['dom_id1']
+    logger.info("run timesale started")
+    url = config['timesale']['url2']
+    dom_id = config['timesale']['dom_id2']
 
     s = WebReader.read(url)
     table = s.find(id=dom_id)
@@ -52,3 +53,4 @@ def read_timesale():
 
     fields = 'ticker price quantity datetime'
     do_bulk_insert_pw(sm.Timesale, records, fields.split(' '))
+    logger.info("run timesale finished")

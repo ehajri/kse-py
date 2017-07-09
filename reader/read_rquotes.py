@@ -2,6 +2,7 @@ from common import *
 
 
 def read_rquotes():
+    logger.info("run rquotes started")
     url = config['rquotes']['url']
     dom_id = config['rquotes']['dom_id']
 
@@ -44,3 +45,4 @@ def read_rquotes():
 
     fields = 'ticker last change open high low vol trade value prev ref prev_date bid ask'
     do_bulk_insert_pw(sm.Rquotes, records, fields.split(' '))
+    logger.info("run rquotes finished")

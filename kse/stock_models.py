@@ -5,8 +5,7 @@ import os
 # database = MySQLDatabase('stock', **{'host': os.environ['MYSQL_PORT_3306_TCP_ADDR'],
 #                          'port': 3306, 'user': 'root', 'password': os.environ['MYSQL_ENV_MYSQL_ROOT_PASSWORD']})
 
-db = MySQLDatabase('stock', **{'host': '127.0.0.1',
-                         'port': 6603, 'user': 'root', 'password': 'passwd'})
+db = MySQLDatabase('stock', **{'user': 'root'})
 
 class UnknownField(object):
     def __init__(self, *_, **__): pass
@@ -32,13 +31,13 @@ class News(BaseModel):
 
 
 class Obook(BaseModel):
-    ask = IntegerField(null=True)
-    ask_qty = IntegerField(null=True)
-    bid = IntegerField(null=True)
-    bid_qty = IntegerField(null=True)
+    ask = TextField()
+    ask_qty = TextField()
+    bid = TextField()
+    bid_qty = TextField()
     createdon = DateField()
-    price = DecimalField()
-    ticker = IntegerField(db_column='ticker_id')
+    price = TextField()
+    ticker = TextField(db_column='ticker_id')
     timestamp = DateTimeField()
 
     class Meta:

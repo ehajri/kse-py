@@ -2,6 +2,7 @@ from common import *
 
 
 def read_obook():
+    logger.info("run obook started")
     url = config['obook']['url']
     dom_id = config['obook']['dom_id']
 
@@ -33,7 +34,10 @@ def read_obook():
         # append rest of tds
         for td in tds:
             temp.append(sanitize(td.text))
+        temp.append(datetime.datetime.today().date())
         records.append(temp)
+
 
     fields = 'ticker price bid bid_qty ask ask_qty createdon'
     do_bulk_insert_pw(sm.Obook, records, fields.split(' '))
+    logger.info("run obook finished")

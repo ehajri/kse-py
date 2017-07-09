@@ -7,7 +7,7 @@ import logging, sys, datetime
 logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
-config = ConfigObj('config.test.ini')
+config = ConfigObj('config.ini')
 
 class WebReader:
     @staticmethod

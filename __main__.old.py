@@ -3,7 +3,7 @@ from kse.Obook import ObookModel, FetchObook
 from kse.Timesale import TimesaleModel, FetchTimesale
 from kse.News import NewsModel, FetchNews
 from kse.Rquotes import RquotesModel, FetchRquotes
-from kse.kse import WebReader, Repo
+from kse.kse import WebReader, Repo, logger
 from kse.stock_models import Running, Rquotes, News, Obook, Timesale
 from configobj import ConfigObj
 import scheduler
@@ -24,6 +24,7 @@ def main(args=None):
 
 
 def run_obook():
+    logger.info("run obook started")
     web_reader = WebReader()
 
     url = config['obook']['url']
@@ -32,9 +33,11 @@ def run_obook():
     fobook = FetchObook(url, dom_id, web_reader)
     obook = ObookModel(Running, fobook, Repo())
     obook.execute()
+    logger.info("run obook finished")
 
 
 def run_rquotes():
+    logger.info("run rquotes started")
     web_reader = WebReader()
 
     url = config['rquotes']['url']
@@ -43,9 +46,11 @@ def run_rquotes():
     frquotes = FetchRquotes(url, dom_id, web_reader)
     rquotes = RquotesModel(Running, frquotes, Repo())
     rquotes.execute()
+    logger.info("run rquotes finished")
 
 
 def run_timesale():
+    logger.info("run timesale started")
     web_reader = WebReader()
 
     url = config['timesale']['url']
@@ -54,6 +59,7 @@ def run_timesale():
     ftimesale = FetchTimesale(url, dom_id, web_reader)
     timesale = TimesaleModel(Running, ftimesale, Repo())
     timesale.execute()
+    logger.info("run timesale finished")
 
 
 def run_news():
