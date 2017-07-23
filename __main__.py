@@ -11,24 +11,46 @@ def main(args=None):
     if args is None:
         args = sys.argv[1:]
 
+
+    def should_read():
+        utcnow = datetime.datetime.utcnow
+        if utcnow().weekday() == 4 or utcnow().weekday() == 5:
+            return False
+        elif utcnow().hour == 5 and utcnow().minute >= 40:
+            return True
+        elif utcnow().hour == 9 and utcnow().minute <= 45:
+            return True
+        elif utcnow().hour > 5 and utcnow().hour < 9:
+            return True
+        return False
+
     def obook():
-        read_obook()
         try:
+            if should_read():
+                read_obook()
+            else:
+                logger.info("obook: early?")
             threading.Timer(10, obook).start()
         except Exception as e:
             logger.error("obook raised an exception:" + str(e))
 
 
     def timesale():
-        read_timesale()
         try:
+            if should_read():
+                read_timesale()
+            else:
+                logger.info("timesale: early?")
             threading.Timer(10, timesale).start()
         except Exception as e:
             logger.error("timesale raised an exception:" + str(e))
 
     def rquotes():
-        read_rquotes()
         try:
+            if should_read():
+                read_rquotes()
+            else:
+                logger.info("rquotes: early?")
             threading.Timer(10, rquotes).start()
         except Exception as e:
             logger.error("rquotes raised an exception:" + str(e))
