@@ -2,10 +2,12 @@ from peewee import *
 import os
 
 
-# database = MySQLDatabase('stock', **{'host': os.environ['MYSQL_PORT_3306_TCP_ADDR'],
-#                          'port': 3306, 'user': 'root', 'password': os.environ['MYSQL_ENV_MYSQL_ROOT_PASSWORD']})
+db = MySQLDatabase('stock', **{'host': os.environ['MYSQL_PORT_3306_TCP_ADDR'],
+                          'port': os.environ['MYSQL_PORT_3306_TCP_PORT'],
+                          'user': 'root',
+                          'password': os.environ['MYSQL_ENV_MYSQL_ROOT_PASSWORD']})
 
-db = MySQLDatabase('stock', **{'user': 'root'})
+#db = MySQLDatabase('stock', **{'user': 'root'})
 
 class UnknownField(object):
     def __init__(self, *_, **__): pass
