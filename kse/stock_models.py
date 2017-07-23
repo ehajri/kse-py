@@ -7,7 +7,7 @@ db = MySQLDatabase('stock', **{'host': os.environ['MYSQL_PORT_3306_TCP_ADDR'],
                           'user': 'root',
                           'password': os.environ['MYSQL_ENV_MYSQL_ROOT_PASSWORD']})
 
-#db = MySQLDatabase('stock', **{'user': 'root'})
+#db = MySQLDatabase('ks_stock_test', **{'user': 'root'})
 
 class UnknownField(object):
     def __init__(self, *_, **__): pass

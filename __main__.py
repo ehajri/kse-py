@@ -30,9 +30,9 @@ def main(args=None):
                 read_obook()
             else:
                 logger.info("obook: early?")
-            threading.Timer(10, obook).start()
         except BaseException as e:
             logger.error("obook raised an exception:" + str(e))
+        threading.Timer(10, obook).start()
 
 
     def timesale():
@@ -41,9 +41,9 @@ def main(args=None):
                 read_timesale()
             else:
                 logger.info("timesale: early?")
-            threading.Timer(10, timesale).start()
         except BaseException as e:
             logger.error("timesale raised an exception:" + str(e))
+        threading.Timer(10, timesale).start()
 
     def rquotes():
         try:
@@ -51,9 +51,9 @@ def main(args=None):
                 read_rquotes()
             else:
                 logger.info("rquotes: early?")
-            threading.Timer(10, rquotes).start()
         except BaseException as e:
             logger.error("rquotes raised an exception:" + str(e))
+        threading.Timer(10, rquotes).start()
 
     threading.Timer(0.1, obook).start()
     threading.Timer(0.1, timesale).start()
