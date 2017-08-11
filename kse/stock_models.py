@@ -112,3 +112,4 @@ class test(BaseModel):
         indexes = (
             (('field1', 'field2'), True),
         )
+
