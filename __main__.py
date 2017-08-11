@@ -4,7 +4,7 @@ from common import *
 from reader.read_rquotes import read_rquotes
 from reader.read_timesale import read_timesale
 from reader.read_obook import read_obook
-
+import traceback
 
 def main(args=None):
     """The main routine."""
