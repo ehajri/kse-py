@@ -3,7 +3,7 @@ import os
 
 
 db = MySQLDatabase('stock', **{'host': os.environ['MYSQL_PORT_3306_TCP_ADDR'],
-                          'port': os.environ['MYSQL_PORT_3306_TCP_PORT'],
+                          'port': 3306,#os.environ['MYSQL_PORT_3306_TCP_PORT'],
                           'user': 'root',
                           'password': os.environ['MYSQL_ENV_MYSQL_ROOT_PASSWORD']})
 
@@ -112,3 +112,4 @@ class test(BaseModel):
         indexes = (
             (('field1', 'field2'), True),
         )
+
