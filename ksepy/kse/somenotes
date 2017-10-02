@@ -1,0 +1,9 @@
+ALTER IGNORE TABLE RQuotes ADD UNIQUE INDEX
+idx_uniquerecord (ticker_id, `last`, `change`, `open`, `high`, `low`, `vol`, `trade`, `value`, `prev`, `ref`, `prev_date`, `bid`, `ask`);
+
+
+ALTER IGNORE TABLE OBook ADD UNIQUE INDEX
+idx_obook_uniquerecord (ticker_id, `price`, `bid`, `bid_qty`, `ask`, `ask_qty`, `createdon`);
+
+ALTER IGNORE TABLE TimeSale ADD UNIQUE INDEX
+idx_timesale_uniquerecord (ticker_id, `price`, quantity, `datetime`);

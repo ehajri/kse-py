@@ -1,0 +1,48 @@
+[db]
+user   = dev
+pass   = youcanseeme
+host   = localhost
+dbname = stock
+dbname2 = mubasher
+
+[rquotes]
+url   =  http://www.kuwaitse.com/Market/RQuotes.aspx
+domId =  ctl00_MainContent_RQGrid
+
+[news]
+url1   = http://www.kuwaitse.com/A/Market/MMessage.aspx
+url2   = http://www.kuwaitse.com/A/Market/ShowNews.aspx?ID=
+domId1 = ctl00_MainContent_NewsGRID
+domId2 = ctl00_MainContent_PlcHldr
+
+[timesale]
+url    = http://www.kuwaitse.com/Stock/StkTSale.aspx?Stk=%d&V=2
+domId  = ctl00_MainContent_TSaleGrid
+url2   = http://www.kuwaitse.com/Market/TimeSale.aspx
+domId2 = ctl00_MainContent_TSaleGrid
+
+[obook]
+url   = http://www.kuwaitse.com/Market/OBook.aspx
+domId = ctl00_MainContent_OBookGRID
+
+
+
+[rquotes]
+url   =  http://www.boursakuwait.com/market/rquotes.aspx
+domId =  MainContent_RQGrid
+
+[news]
+url1   = http://www.boursakuwait.com/market/mmessage.aspx
+url2   = http://www.boursakuwait.com/market/shownews.aspx?ID=
+domId1 = MainContent_NewsGRID
+domId2 = MainContent_PlcHldr
+
+[timesale]
+url    = http://www.boursakuwait.com/stock/stktsale.aspx?Stk=%d&V=2
+domId  = MainContent_TSaleGrid
+url2   = http://www.boursakuwait.com/market/timesale.aspx
+domId2 = MainContent_TSaleGrid
+
+[obook]
+url   = http://www.boursakuwait.com/market/obook.aspx
+domId = ContentMatter_OBookGRID
