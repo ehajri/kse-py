@@ -2,39 +2,16 @@ import requests, peewee
 from bs4 import BeautifulSoup
 from kse import stock_models as sm
 from configobj import ConfigObj
-import logging, sys, datetime
-
-#logging.basicConfig(stream=sys.stderr, level=logging.INFO)
-#logger = logging.getLogger(__name__)
-
-formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
+import logging, logging.config, sys, datetime
 
 
-def console_logger(name, level=logging.INFO):
-    handler = logging.StreamHandler(sys.stderr)
-    handler.setFormatter(formatter)
+logging.config.fileConfig('logging.conf')
+t = logging.config.listen(44556)
+t.start()
 
-    logger = logging.getLogger(name)
-    logger.setLevel(level)
-    logger.addHandler(handler)
+logger = logging.getLogger('')
+errorlogger = logging.getLogger('file')
 
-    return logger
-
-
-def setup_logger(name, log_file, level=logging.INFO):
-    """Function setup as many loggers as you want"""
-
-    handler = logging.FileHandler(log_file)
-    handler.setFormatter(formatter)
-
-    logger = logging.getLogger(name)
-    logger.setLevel(level)
-    logger.addHandler(handler)
-
-    return logger
-
-logger = console_logger('CONSOLE')
-errorlogger = setup_logger('EXCEPTION', '/tmp/kse.log')
 
 config = ConfigObj('config.ini')
 
