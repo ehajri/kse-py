@@ -1,4 +1,4 @@
-import sys, os
+import sys, os, signal
 import threading
 from common import *
 from reader.read_rquotes import read_rquotes
