@@ -65,7 +65,7 @@ class RquotesModel(MyBaseModel):
             return records
 
     def save(self, records):
-        kse.logger.debug('Rquotes.save is called for %s records.', len(records))
+        kse.logger.info('Rquotes.save is called for %s records.', len(records))
         kse.do_bulk_insert_pw(sm.Rquotes, records, self.fields.split(' '))
 
     def execute(self):

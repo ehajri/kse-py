@@ -1,4 +1,4 @@
-import sys, os
+import sys, os, traceback
 import threading
 from common import *
 from reader.read_rquotes import read_rquotes
@@ -30,9 +30,8 @@ def main(args=None):
                 read_obook()
             else:
                 logger.info("obook: early?")
-        except BaseException as e:
-            logger.error("obook raised an exception:" + str(e))
-            errorlogger.error("obook raised an exception:" + str(e))
+        except Exception as err:
+            traceback.print_tb(err.__traceback__)
         threading.Timer(10, obook).start()
 
 
