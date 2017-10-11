@@ -66,7 +66,7 @@ class ObookModel(MyBaseModel):
         return records
 
     def save(self, records):
-        kse.logger.debug('OBook.save is called for %s records.', len(records))
+        kse.logger.info('OBook.save is called for %s records.', len(records))
         #kse.do_individual_insert_pw(sm.Obook, records, self.fields.split(' '))
         self.repo.insert_many(records)
         # self.repo.insert(records, self.fields.split(' '))

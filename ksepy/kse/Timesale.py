@@ -81,7 +81,7 @@ class TimesaleModel(MyBaseModel):
         return None
 
     def save(self, records):
-        kse.logger.debug('Timesale.save is called for %s records.', len(records))
+        kse.logger.info('Timesale.save is called for %s records.', len(records))
         kse.do_individual_insert_pw(sm.Timesale, records, self.fields.split(' '))
         # self.repo.insert(records, self.fields.split(' '))
 
