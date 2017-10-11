@@ -31,7 +31,12 @@ def main(args=None):
             else:
                 logger.info("obook: early?")
         except Exception as err:
+            print("Obook raised an error")
             traceback.print_tb(err.__traceback__)
+            logger.error("Obook raised an error")
+            logger.error(traceback.extract_tb(err.__traceback__))
+            errorlogger.error("Obook raised an error")
+            errorlogger.error(traceback.extract_tb(err.__traceback__))
         threading.Timer(10, obook).start()
 
 
@@ -41,9 +46,13 @@ def main(args=None):
                 read_timesale()
             else:
                 logger.info("timesale: early?")
-        except BaseException as e:
-            logger.error("timesale raised an exception:" + str(e))
-            errorlogger.error("timesale raised an exception:" + str(e))
+        except Exception as err:
+                print("timesale raised an error")
+                traceback.print_tb(err.__traceback__)
+                logger.error("timesale raised an error")
+                logger.error(traceback.extract_tb(err.__traceback__))
+                errorlogger.error("timesale raised an error")
+                errorlogger.error(traceback.extract_tb(err.__traceback__))
         threading.Timer(10, timesale).start()
 
     def rquotes():
@@ -52,9 +61,13 @@ def main(args=None):
                 read_rquotes()
             else:
                 logger.info("rquotes: early?")
-        except BaseException as e:
-            logger.error("rquotes raised an exception:" + str(e))
-            errorlogger.error("rquotes raised an exception:" + str(e))
+        except Exception as err:
+                print("rquotes raised an error")
+                traceback.print_tb(err.__traceback__)
+                logger.error("rquotes raised an error")
+                logger.error(traceback.extract_tb(err.__traceback__))
+                errorlogger.error("rquotes raised an error")
+                errorlogger.error(traceback.extract_tb(err.__traceback__))
         threading.Timer(10, rquotes).start()
 
     threading.Timer(0.1, obook).start()

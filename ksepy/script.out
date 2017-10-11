@@ -1,0 +1,12 @@
+2017-10-11 22:32:21,833 root         INFO     obook: early?
+2017-10-11 22:32:21,833 root         INFO     timesale: early?
+2017-10-11 22:32:21,833 root         INFO     rquotes: early?
+Exception ignored in: <module 'threading' from '/usr/local/Cellar/python3/3.6.0/Frameworks/Python.framework/Versions/3.6/lib/python3.6/threading.py'>
+Traceback (most recent call last):
+  File "/usr/local/Cellar/python3/3.6.0/Frameworks/Python.framework/Versions/3.6/lib/python3.6/threading.py", line 1290, in _shutdown
+    t.join()
+  File "/usr/local/Cellar/python3/3.6.0/Frameworks/Python.framework/Versions/3.6/lib/python3.6/threading.py", line 1056, in join
+    self._wait_for_tstate_lock()
+  File "/usr/local/Cellar/python3/3.6.0/Frameworks/Python.framework/Versions/3.6/lib/python3.6/threading.py", line 1072, in _wait_for_tstate_lock
+    elif lock.acquire(block, timeout):
+KeyboardInterrupt
