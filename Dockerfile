@@ -5,4 +5,4 @@ WORKDIR /app
 RUN pip3 install -r requirements.txt
 #CMD ["./script.sh"]
 #CMD ["tail", "-f", "/dev/null"]
-CMD ["python3", "__main__.py"]
+CMD ["python3", "__main__.py", ">", "script.out", "2>&1"]
