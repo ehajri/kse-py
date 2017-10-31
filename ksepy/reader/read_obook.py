@@ -1,4 +1,4 @@
-from common import *
+from app.ksepy.common import *
 
 
 def read_obook():
@@ -7,6 +7,10 @@ def read_obook():
     dom_id = config['obook']['dom_id']
 
     s = WebReader.read(url)
+    if s is None:
+        logger.error("obook couldn't read the web")
+        errorlogger.error("obook couldn't read the web")
+        return
     table = s.find(id=dom_id)
 
     if table is None:

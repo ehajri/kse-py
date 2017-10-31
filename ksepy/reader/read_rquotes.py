@@ -1,4 +1,4 @@
-from common import *
+from app.ksepy.common import *
 
 
 def read_rquotes():
@@ -7,6 +7,11 @@ def read_rquotes():
     dom_id = config['rquotes']['dom_id']
 
     s = WebReader.read(url)
+    if s is None:
+        logger.error("rquotes couldn't read the web")
+        errorlogger.error("rquotes couldn't read the web")
+        return
+
     table = s.find(id=dom_id)
 
     if table is None:

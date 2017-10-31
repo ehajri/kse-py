@@ -1,12 +1,14 @@
 import sys
-from kse.Obook import ObookModel, FetchObook
-from kse.Timesale import TimesaleModel, FetchTimesale
-from kse.News import NewsModel, FetchNews
-from kse.Rquotes import RquotesModel, FetchRquotes
-from kse.kse import WebReader, Repo, logger
-from kse.stock_models import Running, Rquotes, News, Obook, Timesale
+
 from configobj import ConfigObj
+
 import scheduler
+from app.ksepy.kse.News import NewsModel, FetchNews
+from app.ksepy.kse.Obook import ObookModel, FetchObook
+from app.ksepy.kse.Rquotes import RquotesModel, FetchRquotes
+from app.ksepy.kse.Timesale import TimesaleModel, FetchTimesale
+from app.ksepy.kse.kse import WebReader, Repo, logger
+from app.ksepy.stock_models import Running
 
 config = ConfigObj('../config.ini')
 

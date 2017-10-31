@@ -1,4 +1,4 @@
-from common import *
+from app.ksepy.common import *
 
 
 def read_timesale():
@@ -7,6 +7,10 @@ def read_timesale():
     dom_id = config['timesale']['dom_id2']
 
     s = WebReader.read(url)
+    if s is None:
+        logger.error("timesale couldn't read the web")
+        errorlogger.error("timesale couldn't read the web")
+        return
     table = s.find(id=dom_id)
 
     if table is None:

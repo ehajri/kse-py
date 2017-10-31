@@ -1,9 +1,13 @@
-import requests, peewee
-from bs4 import BeautifulSoup
-from kse import stock_models as sm
-from configobj import ConfigObj
-import logging, logging.config, sys, datetime
+import datetime
+import logging
+import logging.config
 
+import peewee
+import requests
+from bs4 import BeautifulSoup
+from configobj import ConfigObj
+
+from app.ksepy import stock_models as sm
 
 logging.config.fileConfig('logging.conf')
 t = logging.config.listen(44556)
@@ -18,9 +22,14 @@ config = ConfigObj('config.ini')
 class WebReader:
     @staticmethod
     def read(link):
-        f = requests.get(link)
-        soup = BeautifulSoup(f.text, 'html.parser')
-        return soup
+        try:
+            f = requests.get(link)
+            soup = BeautifulSoup(f.text, 'html.parser')
+            return soup
+        except requests.ConnectionError as err:
+            logger.error("WebReader Couldn't read " + link)
+            errorlogger.error("WebReader Couldn't read " + link)
+        return None
 
 
 def do_bulk_insert_pw(model, records, fields):

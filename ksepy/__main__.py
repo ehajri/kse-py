@@ -1,78 +1,44 @@
-import sys, os, traceback
+import os
+import sys
 import threading
+import traceback
+from datetime import time
 from common import *
+from reader.read_obook import read_obook
 from reader.read_rquotes import read_rquotes
 from reader.read_timesale import read_timesale
-from reader.read_obook import read_obook
-import traceback
 
 def main(args=None):
     """The main routine."""
     if args is None:
         args = sys.argv[1:]
 
-
     def should_read():
-        utcnow = datetime.datetime.utcnow
-        if utcnow().weekday() == 4 or utcnow().weekday() == 5:
-            return False
-        elif utcnow().hour == 5 and utcnow().minute >= 40:
-            return True
-        elif utcnow().hour == 9 and utcnow().minute <= 45:
-            return True
-        elif utcnow().hour > 5 and utcnow().hour < 9:
+        utcnow = datetime.datetime.utcnow()
+        day = utcnow.weekday
+        now = utcnow.time()
+        if day not in [4, 5] and time(5, 40) <= now <= time(9, 45):
             return True
         return False
 
-    def obook():
+    def newcall(func):
         try:
             if should_read():
-                read_obook()
+                func()
             else:
-                logger.info("obook: early?")
+                logger.info(func.__name__ + " early?")
         except Exception as err:
-            print("Obook raised an error")
+            print(func.__name__ + " raised an error")
             traceback.print_tb(err.__traceback__)
-            logger.error("Obook raised an error")
+            logger.error(func.__name__ + " raised an error")
             logger.error(traceback.extract_tb(err.__traceback__))
-            errorlogger.error("Obook raised an error")
+            errorlogger.error(func.__name__ + " raised an error")
             errorlogger.error(traceback.extract_tb(err.__traceback__))
-        threading.Timer(10, obook).start()
-
-
-    def timesale():
-        try:
-            if should_read():
-                read_timesale()
-            else:
-                logger.info("timesale: early?")
-        except Exception as err:
-                print("timesale raised an error")
-                traceback.print_tb(err.__traceback__)
-                logger.error("timesale raised an error")
-                logger.error(traceback.extract_tb(err.__traceback__))
-                errorlogger.error("timesale raised an error")
-                errorlogger.error(traceback.extract_tb(err.__traceback__))
-        threading.Timer(10, timesale).start()
-
-    def rquotes():
-        try:
-            if should_read():
-                read_rquotes()
-            else:
-                logger.info("rquotes: early?")
-        except Exception as err:
-                print("rquotes raised an error")
-                traceback.print_tb(err.__traceback__)
-                logger.error("rquotes raised an error")
-                logger.error(traceback.extract_tb(err.__traceback__))
-                errorlogger.error("rquotes raised an error")
-                errorlogger.error(traceback.extract_tb(err.__traceback__))
-        threading.Timer(10, rquotes).start()
-
-    threading.Timer(0.1, obook).start()
-    threading.Timer(0.1, timesale).start()
-    threading.Timer(0.1, rquotes).start()
+        threading.Timer(10, newcall, args=(func)).start()
+        
+    threading.Timer(0.1, newcall, args=(read_obook)).start()
+    threading.Timer(0.1, newcall, args=(read_timesale)).start()
+    threading.Timer(0.1, newcall, args=(read_rquotes)).start()
 
 
 if __name__ == '__main__':
